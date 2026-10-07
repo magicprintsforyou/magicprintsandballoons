@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Upload, Sparkles, Save, Edit2, Image as ImageIcon, CheckCircle2, Package, Tag, Layers, FolderPlus, Building2, AlertCircle, LogOut } from 'lucide-react';
+import { ArrowLeft, Upload, Sparkles, Save, Edit2, Image as ImageIcon, CheckCircle2, Package, Tag, Layers, FolderPlus, Building2, AlertCircle, LogOut, MessageCircle } from 'lucide-react';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -174,7 +174,9 @@ function AdminPortalContent() {
     setTags(prod.themes?.join(', ') || '');
     setMaterials(prod.materials?.join(', ') || '');
     setRushPrice(prod.rush_price?.toString() || '');
-    setVariants(prod.variants || []);
+    // Deep copy: never share the array/object references with the catalog state,
+    // otherwise in-place edits would mutate the catalog behind React's back.
+    setVariants((prod.variants || []).map(v => ({ size: v.size || '', price: Number(v.price) || 0 })));
     setActiveTab('product');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -199,11 +201,18 @@ function AdminPortalContent() {
       themes: tags.split(',').map(t => t.trim()).filter(Boolean),
       materials: materials.split(',').map(m => m.trim()).filter(Boolean),
       rush_price: parseFloat(rushPrice) || 0,
-      variants
+      // Drop fully-empty rows (no size and no price) so junk never reaches the DB.
+      variants: variants.filter(v => String(v.size || '').trim() !== '' || Number(v.price) > 0)
     };
 
     if (editingProductId) {
-      await updateProduct(category, productData);
+      const result = await updateProduct(category, productData);
+      if (!result.ok) {
+        // Do NOT show success and do NOT reset the form: the user's work is preserved
+        // so nothing is lost while the DB problem gets fixed.
+        alert(`Could not save to the database:\n\n${result.error}\n\nYour changes were kept in this form and saved locally, but they are NOT in Supabase yet.`);
+        return;
+      }
     } else {
       await addProduct(category, productData);
     }
@@ -312,6 +321,14 @@ function AdminPortalContent() {
         </div>
 
         <div className="flex items-center gap-4">
+          <Link href="/admin/prices" className="flex items-center gap-2 px-6 py-2 rounded-full bg-[#d90082]/10 hover:bg-[#d90082]/20 transition-all text-xs font-bold uppercase tracking-widest text-[#d90082] border border-[#d90082]/20">
+            <Tag size={14} />
+            Editar precios
+          </Link>
+          <Link href="/admin/chats" className="flex items-center gap-2 px-6 py-2 rounded-full bg-blue-500/10 hover:bg-blue-500/20 transition-all text-xs font-bold uppercase tracking-widest text-blue-400 border border-blue-500/20">
+            <MessageCircle size={14} />
+            Website Chats
+          </Link>
           <Link href="/products" className="flex items-center gap-2 px-6 py-2 rounded-full bg-white/5 hover:bg-white/10 transition-all text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white border border-white/5">
             <ArrowLeft size={14} />
             View Catalog

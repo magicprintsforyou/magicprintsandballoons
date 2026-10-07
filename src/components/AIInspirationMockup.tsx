@@ -3,11 +3,7 @@
 import React, { useState } from 'react';
 import { Upload, Sparkles, Check, ArrowRight, Image as ImageIcon, Ruler, Layers, UserCheck, Mail } from 'lucide-react';
 
-interface PrintScaleQualityVisualizerProps {
-  lang?: 'en' | 'es';
-}
-
-export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVisualizerProps) {
+export default function AIInspirationMockup() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [imgDimensions, setImgDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -16,7 +12,7 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
   const [posY, setPosY] = useState<number>(50);
   const [zoom, setZoom] = useState<number>(100);
 
-  // Modal Email Form state for Claude Automated Routing
+  // Modal Email Form state for quote requests
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
@@ -109,7 +105,6 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
     }
   };
 
-  const isEs = lang === 'es';
   const quality = getQualityAssessment();
 
   return (
@@ -117,15 +112,13 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
       <div className="max-w-3xl mx-auto text-center mb-8">
         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#d90082]/20 border border-[#d90082]/40 text-[#ffcc00] text-xs font-bold uppercase tracking-widest mb-4">
           <Ruler className="w-4 h-4 text-[#ffcc00]" />
-          {isEs ? 'VISUALIZADOR REAL-SIZE Y CALIDAD DE IMPRESIÓN' : 'REAL LIFE-SIZE SCALE & QUALITY CHECKER'}
+          'REAL LIFE-SIZE SCALE & QUALITY CHECKER'
         </span>
         <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-3">
-          {isEs ? 'Comprueba el Tamaño Real y Calidad de tu Foto' : 'Check Real Life-Size Scale & Print Quality'}
+          'Check Real Life-Size Scale & Print Quality'
         </h2>
         <p className="text-[#a0a0a0] text-sm md:text-base font-light">
-          {isEs 
-            ? 'Sube tu imagen o personaje troquelado (Cut-Out) y mira la escala en relación a una persona real de 5.8ft (1.75m).'
-            : 'Upload your photo or character cut-out to see exact dimensions and real-life scale next to a 5.8ft human silhouette.'}
+          'Upload your photo or character cut-out to see exact dimensions and real-life scale next to a 5.8ft human silhouette.'
         </p>
       </div>
 
@@ -154,7 +147,7 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
               <>
                 <Upload className="w-8 h-8 text-[#ffcc00] mb-2 animate-bounce" />
                 <p className="font-bold text-xs text-white">
-                  {isEs ? 'Sube tu Diseño o Personaje Cut-Out' : 'Upload Artwork or Character Cut-Out'}
+                  'Upload Artwork or Character Cut-Out'
                 </p>
                 <span className="text-[10px] text-[#a0a0a0] mt-1">PNG, JPG, WEBP, PDF</span>
               </>
@@ -164,32 +157,32 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
           {/* Category Tabs */}
           <div>
             <label className="text-[11px] text-[#a0a0a0] uppercase tracking-wider block mb-2 font-bold">
-              {isEs ? '1. Selecciona la Categoría' : '1. Select Solution Category'}
+              '1. Select Solution Category'
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button 
                 onClick={() => { setCategory('backdrop'); setSelectedSize('8x8'); }}
                 className={`py-2 px-3 rounded-lg text-xs font-bold transition-all border ${category === 'backdrop' ? 'bg-[#d90082] text-white border-[#d90082]' : 'bg-black/50 text-[#a0a0a0] border-white/10'}`}
               >
-                {isEs ? 'Backdrops Pared' : 'Photo Backdrops'}
+                'Photo Backdrops'
               </button>
               <button 
                 onClick={() => { setCategory('cutout'); setSelectedSize('6ft_cutout'); }}
                 className={`py-2 px-3 rounded-lg text-xs font-bold transition-all border ${category === 'cutout' ? 'bg-[#d90082] text-white border-[#d90082]' : 'bg-black/50 text-[#a0a0a0] border-white/10'}`}
               >
-                {isEs ? 'Cut-Out Personaje' : 'Character Cut-Out'}
+                'Character Cut-Out'
               </button>
               <button 
                 onClick={() => { setCategory('retractable'); setSelectedSize('33x83'); }}
                 className={`py-2 px-3 rounded-lg text-xs font-bold transition-all border ${category === 'retractable' ? 'bg-[#d90082] text-white border-[#d90082]' : 'bg-black/50 text-[#a0a0a0] border-white/10'}`}
               >
-                {isEs ? 'Banner Retráctil' : 'Retractable Banner'}
+                'Retractable Banner'
               </button>
               <button 
                 onClick={() => { setCategory('floor'); setSelectedSize('10x10_floor'); }}
                 className={`py-2 px-3 rounded-lg text-xs font-bold transition-all border ${category === 'floor' ? 'bg-[#d90082] text-white border-[#d90082]' : 'bg-black/50 text-[#a0a0a0] border-white/10'}`}
               >
-                {isEs ? 'Pisos de Vinil' : 'Floor Wrap Vinyl'}
+                'Floor Wrap Vinyl'
               </button>
             </div>
           </div>
@@ -197,7 +190,7 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
           {/* Size Select dropdown */}
           <div>
             <label className="text-[11px] text-[#a0a0a0] uppercase tracking-wider block mb-2 font-bold">
-              {isEs ? '2. Selecciona la Medida Exacta' : '2. Select Exact Print Dimensions'}
+              '2. Select Exact Print Dimensions'
             </label>
             <select 
               value={selectedSize}
@@ -206,7 +199,7 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
             >
               {sizesByCategory[category]?.map(s => (
                 <option key={s.id} value={s.id}>
-                  {isEs ? s.labelEs : s.labelEn}
+                  {s.labelEn}
                 </option>
               ))}
             </select>
@@ -215,8 +208,8 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
           {/* Resolution Quality Feedback Badge */}
           {quality && (
             <div className={`p-4 rounded-xl border ${quality.bg} text-xs font-medium`}>
-              <div className={`font-bold text-sm mb-1 ${quality.color}`}>{isEs ? quality.titleEs : quality.titleEn}</div>
-              <p className="text-white/80 leading-relaxed text-[11px]">{isEs ? quality.descEs : quality.descEn}</p>
+              <div className={`font-bold text-sm mb-1 ${quality.color}`}>{quality.titleEn}</div>
+              <p className="text-white/80 leading-relaxed text-[11px]">{quality.descEn}</p>
             </div>
           )}
         </div>
@@ -226,10 +219,10 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
           <div className="w-full flex justify-between items-center mb-4">
             <span className="text-xs font-bold uppercase tracking-wider text-[#ffcc00] flex items-center gap-1">
               <UserCheck className="w-4 h-4" />
-              {isEs ? 'Comparación a Escala de Tamaño Real (Humano 5.8ft)' : 'Real Life-Size Scale (vs 5.8ft Human)'}
+              'Real Life-Size Scale (vs 5.8ft Human)'
             </span>
             <span className="text-[10px] bg-white/10 px-2.5 py-1 rounded text-white font-mono">
-              {currentSizeObj ? (isEs ? currentSizeObj.labelEs : currentSizeObj.labelEn) : ''}
+              {currentSizeObj ? (currentSizeObj.labelEn) : ''}
             </span>
           </div>
 
@@ -288,19 +281,19 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
           {previewUrl && (
             <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 mt-3 flex flex-col gap-2">
               <div className="flex justify-between items-center text-xs font-bold text-[#ffcc00] uppercase tracking-wider">
-                <span>↕️ {isEs ? 'Ajustar Posición (Subir / Bajar Cara)' : 'Adjust Position (Move Face Up/Down)'}</span>
+                <span>↕️ 'Adjust Position (Move Face Up/Down)'</span>
                 <button 
                   onClick={() => { setPosY(50); setZoom(100); }}
                   className="text-[10px] text-white/70 hover:text-white underline cursor-pointer"
                 >
-                  {isEs ? 'Centrar' : 'Reset Center'}
+                  'Reset Center'
                 </button>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="flex justify-between text-[10px] text-[#a0a0a0] mb-1 font-bold">
-                    <span>{isEs ? 'Subir / Bajar' : 'Vertical Y'}</span>
+                    <span>Vertical Y</span>
                     <span>{posY}%</span>
                   </div>
                   <input 
@@ -315,7 +308,7 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
 
                 <div>
                   <div className="flex justify-between text-[10px] text-[#a0a0a0] mb-1 font-bold">
-                    <span>{isEs ? 'Zoom' : 'Scale'}</span>
+                    <span>Scale</span>
                     <span>{zoom}%</span>
                   </div>
                   <input 
@@ -338,14 +331,14 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
               className="w-full py-3.5 bg-gradient-to-r from-[#cc004e] via-[#d90082] to-[#ffcc00] text-white hover:scale-[1.01] transition-transform rounded-xl text-center font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg cursor-pointer"
             >
               <Mail className="w-4 h-4" />
-              {isEs ? `Enviar Cotización Directa al Email` : `Send Quote Request via Email (Claude Inbox)`}
+              {`Send Quote Request via Email`}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Email Quote Request Modal (Routed to Specific Inbox for Claude Auto-Responder) */}
+      {/* Email Quote Request Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#0A0212] border border-[#d90082]/40 rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl relative text-white">
@@ -357,34 +350,30 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
             </button>
 
             <span className="text-[10px] text-[#ffcc00] font-bold uppercase tracking-widest block mb-1">
-              {isEs ? 'CORREO AUTOMATIZADO DE COTIZACIÓN' : 'AUTOMATED EMAIL QUOTE ROUTER'}
+              'QUOTE REQUEST'
             </span>
             <h3 className="text-xl font-black uppercase mb-2">
-              {isEs ? 'Enviar Solicitud al Email de Imprenta' : 'Send Quote Request to Print Inbox'}
+              'Send Quote Request to Print Inbox'
             </h3>
             <p className="text-xs text-[#a0a0a0] mb-6">
-              {isEs 
-                ? 'Tu solicitud llegará a una carpeta dedicada para respuesta inmediata de Claude / Yndira. Producto: ' 
-                : 'Your quote will land in our dedicated inbox for rapid response. Selected product: '}
-              <strong className="text-white">{currentSizeObj ? (isEs ? currentSizeObj.labelEs : currentSizeObj.labelEn) : ''}</strong>
+              'Your quote will land in our dedicated inbox for rapid response. Selected product: '
+              <strong className="text-white">{currentSizeObj ? (currentSizeObj.labelEn) : ''}</strong>
             </p>
 
             {emailSuccess ? (
               <div className="bg-emerald-500/10 border border-emerald-500/30 p-6 rounded-xl text-center">
                 <Check className="w-12 h-12 text-emerald-400 mx-auto mb-2" />
                 <h4 className="font-bold text-sm text-emerald-300 mb-1">
-                  {isEs ? '¡Cotización Enviada al Email!' : 'Quote Sent to Email Folder!'}
+                  'Quote Sent to Email Folder!'
                 </h4>
                 <p className="text-xs text-white/80">
-                  {isEs 
-                    ? 'Tu solicitud ha sido enviada al sistema de email. Pronto recibirás la propuesta personalizada.' 
-                    : 'Your request has been routed to our dedicated quote inbox.'}
+                  'Your request has been routed to our dedicated quote inbox.'
                 </p>
                 <button 
                   onClick={() => { setIsModalOpen(false); setEmailSuccess(false); }}
                   className="mt-4 px-6 py-2 bg-white text-black rounded-lg text-xs font-bold uppercase"
                 >
-                  {isEs ? 'Cerrar' : 'Close'}
+                  'Close'
                 </button>
               </div>
             ) : (
@@ -401,14 +390,14 @@ export default function AIInspirationMockup({ lang = 'en' }: PrintScaleQualityVi
                         email: clientEmail,
                         phone: clientPhone,
                         eventDate: eventDate,
-                        needs: [currentSizeObj ? (isEs ? currentSizeObj.labelEs : currentSizeObj.labelEn) : 'Print Product'],
-                        notes: `[CLAUDE-QUOTE-PENDING] Size: ${currentSizeObj ? currentSizeObj.id : ''}. User Position Y: ${posY}%, Zoom: ${zoom}%. ${eventNotes}`,
+                        needs: [currentSizeObj ? (currentSizeObj.labelEn) : 'Print Product'],
+                        notes: `[WEB-QUOTE] Size: ${currentSizeObj ? currentSizeObj.id : ''}. User Position Y: ${posY}%, Zoom: ${zoom}%. ${eventNotes}`,
                       })
                     });
                     if (res.ok) {
                       setEmailSuccess(true);
                     } else {
-                      window.location.href = `mailto:magicprintsforyou@gmail.com?subject=[CLAUDE-QUOTE-PENDING] ${encodeURIComponent(clientName)} - ${currentSizeObj?.id}&body=${encodeURIComponent(`Client: ${clientName}
+                      window.location.href = `mailto:info@magicprintsforyou.com?subject=[WEB-QUOTE] ${encodeURIComponent(clientName)} - ${currentSizeObj?.id}&body=${encodeURIComponent(`Client: ${clientName}
 Email: ${clientEmail}
 Phone: ${clientPhone}
 Event Date: ${eventDate}
@@ -417,7 +406,7 @@ Notes: ${eventNotes}`)}`;
                       setEmailSuccess(true);
                     }
                   } catch (err) {
-                    window.location.href = `mailto:magicprintsforyou@gmail.com?subject=[CLAUDE-QUOTE-PENDING] ${encodeURIComponent(clientName)}`;
+                    window.location.href = `mailto:info@magicprintsforyou.com?subject=[WEB-QUOTE] ${encodeURIComponent(clientName)}`;
                     setEmailSuccess(true);
                   }
                   setIsSubmittingEmail(false);
@@ -426,7 +415,7 @@ Notes: ${eventNotes}`)}`;
               >
                 <div>
                   <label className="text-[10px] text-[#a0a0a0] font-bold uppercase block mb-1">
-                    {isEs ? 'Tu Nombre / Nombre de la Empresa' : 'Your Name / Company Name'} *
+                    'Your Name / Company Name' *
                   </label>
                   <input 
                     type="text" 
@@ -441,7 +430,7 @@ Notes: ${eventNotes}`)}`;
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-[10px] text-[#a0a0a0] font-bold uppercase block mb-1">
-                      {isEs ? 'Correo Electrónico' : 'Email Address'} *
+                      'Email Address' *
                     </label>
                     <input 
                       type="email" 
@@ -455,7 +444,7 @@ Notes: ${eventNotes}`)}`;
 
                   <div>
                     <label className="text-[10px] text-[#a0a0a0] font-bold uppercase block mb-1">
-                      {isEs ? 'Teléfono (Opcional)' : 'Phone (Optional)'}
+                      'Phone (Optional)'
                     </label>
                     <input 
                       type="tel" 
@@ -469,7 +458,7 @@ Notes: ${eventNotes}`)}`;
 
                 <div>
                   <label className="text-[10px] text-[#a0a0a0] font-bold uppercase block mb-1">
-                    {isEs ? 'Fecha del Evento' : 'Event Date'}
+                    'Event Date'
                   </label>
                   <input 
                     type="date" 
@@ -481,13 +470,13 @@ Notes: ${eventNotes}`)}`;
 
                 <div>
                   <label className="text-[10px] text-[#a0a0a0] font-bold uppercase block mb-1">
-                    {isEs ? 'Notas Adicionales o Instrucciones de Venue' : 'Additional Notes or Venue Setup Info'}
+                    'Additional Notes or Venue Setup Info'
                   </label>
                   <textarea 
                     rows={2}
                     value={eventNotes}
                     onChange={(e) => setEventNotes(e.target.value)}
-                    placeholder={isEs ? 'Ej. Necesitamos instalación en venue a las 8:00 AM' : 'e.g. Need venue setup completed by 8:00 AM'}
+                    placeholder='e.g. Need venue setup completed by 8:00 AM'
                     className="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-xs text-white focus:border-[#d90082] outline-none"
                   />
                 </div>
@@ -498,8 +487,8 @@ Notes: ${eventNotes}`)}`;
                   className="w-full py-3.5 bg-gradient-to-r from-[#cc004e] via-[#d90082] to-[#ffcc00] text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:scale-[1.01] transition-transform shadow-lg cursor-pointer"
                 >
                   {isSubmittingEmail 
-                    ? (isEs ? 'Enviando a Carpeta de Email...' : 'Routing Email...') 
-                    : (isEs ? 'Enviar Solicitud al Email de Imprenta' : 'Send Quote Request to Print Inbox')}
+                    ? ('Routing Email...') 
+                    : ('Send Quote Request to Print Inbox')}
                 </button>
               </form>
             )}

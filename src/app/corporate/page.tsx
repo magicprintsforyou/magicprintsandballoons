@@ -215,7 +215,7 @@ export default function CorporatePage() {
       </section>
 
       {/* Corporate Products Catalog */}
-      <section id="corporate-catalog" className="py-32 bg-[#F8F9FA] px-6 border-t border-slate-200">
+      <section id="corporate-catalog" className="py-32 bg-[#F8F9FA] px-6 border-t border-slate-200 scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
              <h2 className="text-5xl md:text-7xl font-black text-[#41137e] tracking-tighter uppercase mb-4">
@@ -228,14 +228,23 @@ export default function CorporatePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {catalog?.b2bSigns?.items?.map((product: any) => (
-              <ProductCard key={product.id} product={product} onViewDetails={setSelectedProduct} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                onViewDetails={setSelectedProduct}
+                onAddToCart={(p) => addToCart(p, {
+                  variant: p.variants?.[0],
+                  material: p.materials?.[0] || 'Foamboard',
+                  isRushOrder: false,
+                })}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* VIP Inquiries Wrapper */}
-      <div id="enquire" className="bg-[#0A0212] py-32 px-4 border-t border-white/5 relative overflow-hidden rounded-t-[120px]">
+      <div id="enquire" className="bg-[#0A0212] py-32 px-4 border-t border-white/5 relative overflow-hidden rounded-t-[120px] scroll-mt-24">
         <div className="absolute inset-0 bg-spiral-float opacity-10 -z-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-screen"></div>
         <div className="max-w-4xl mx-auto text-center mb-20 pt-10">
           <div className="inline-block p-4 rounded-3xl bg-white/5 border border-white/10 mb-8">

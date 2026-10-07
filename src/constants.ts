@@ -3,23 +3,25 @@ import { SiteConfig } from './types';
 export const INITIAL_CONFIG: SiteConfig = {
     hero: {
         title: "Magic",
-        subtitle: "IMPRESSIONS",
-        welcomeTitle: "ELEVATING YOUR EVENTS",
+        subtitle: "PRINTS & BALLOONS",
+        welcomeTitle: "EVERYTHING FOR YOUR PARTY",
         backgroundImages: [
             "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=2000",
             "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000",
-            "https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&q=80&w=2000"
+            "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&q=80&w=2000"
         ],
         primaryBtnText: "CATALOG",
         secondaryBtnText: "CUSTOM QUOTE"
     },
     categories: [
         { name: "PHOTO BOARDS", image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=200" },
-        { name: "PROPS & CUTOUTS", image: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?q=80&w=200" },
+        { name: "CUTOUTS & PROPS", image: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?q=80&w=200" },
         { name: "FLOOR WRAPS", image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=200" },
         { name: "BACKDROPS", image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=200" },
-        { name: "WELCOME SIGNS", image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=200" },
-        { name: "SEATING PLANS", image: "https://images.unsplash.com/photo-1535232142137-676ebd102220?q=80&w=200" }
+        { name: "LATEX BALLOONS", image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=200" },
+        { name: "DIY BALLOON KITS", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=200" },
+        { name: "HELIUM BALLOONS", image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=200" },
+        { name: "BALLOON ACCESSORIES", image: "https://images.unsplash.com/photo-1512909006721-3d6018887383?q=80&w=200" }
     ],
     occasions: [
         "Anniversary", "Baby Shower", "Baptism", "Bar / Bat Mitzvah",
@@ -54,8 +56,8 @@ export const INITIAL_CONFIG: SiteConfig = {
         slogan: "Transforming Dreams Into Reality"
     },
     footer: {
-        slogan: "Excellence in Event Printing",
-        copyright: "© 2026 Magic Prints For You. All rights reserved."
+        slogan: "Prints & Balloons for Every Celebration",
+        copyright: "© 2026 magicprintsandballoons. All rights reserved."
     },
     corporateGallery: []
 };

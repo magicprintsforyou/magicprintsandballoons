@@ -26,14 +26,33 @@ export const CATEGORIZED_PRODUCTS = {
         image: "/images/photo-board-9856.jpg",
         description: "Museum-grade foam board or Sintra material with scratch-resistant matte finish.",
         themes: ["wedding", "birthday", "corporate", "graduation"],
+        price: 120.00,
         variants: [
-          { size: "5 ft H x 3 ft W", price: 120.00 },
-          { size: "6 ft H x 4 ft W", price: 130.00 },
-          { size: "7 ft H x 4 ft W", price: 150.00 },
-          { size: "8 ft H x 4 ft W", price: 160.00 },
-          { size: "7ft x 7ft Square", price: 450.00 },
-          { size: "8ft x 8ft Standard", price: 550.00 },
-          { size: "8ft x 20ft Giant", price: 1200.00 },
+          { size: "5x4 ft", price: 120.00 },
+          { size: "6x4 ft", price: 130.00 },
+          { size: "7x4 ft", price: 150.00 },
+          { size: "7x8 ft", price: 160.00 },
+          { size: "6x6 ft", price: 260.00 },
+          { size: "7x7 ft", price: 300.00 },
+          { size: "8x8 ft", price: 320.00 },
+          { size: "8x10 ft", price: 480.00 },
+          { size: "8x12 ft", price: 590.00 },
+          { size: "8x20 ft", price: 950.00 },
+        ]
+      },
+      {
+        id: "custom-seating-chart",
+        name: "Custom Seating Chart",
+        category: "Photo",
+        image: "/images/photo-board-9856.jpg",
+        description: "Elegant seating charts for weddings and quinceañeras. Design fee $20 additional — free if you already have your design.",
+        themes: ["wedding", "quinceanera", "birthday", "corporate"],
+        price: 120.00,
+        variants: [
+          { size: "5x4 ft", price: 120.00 },
+          { size: "6x4 ft", price: 130.00 },
+          { size: "7x4 ft", price: 150.00 },
+          { size: "7x8 ft", price: 160.00 },
         ]
       },
       {
@@ -156,18 +175,18 @@ export const CATEGORIZED_PRODUCTS = {
       },
       {
         id: "themed-props",
-        name: "Themed Character Props",
+        name: "Custom Life-Size Cutout",
         category: "Props",
         image: "/images/covers/themed-props.jpg",
-        description: "Custom cut-outs on thick double-walled foam board. High-resolution print with easel backs.",
-        themes: ["kids birthday", "barbie", "safari", "superhero"],
+        description: "Custom photo cutouts on durable coroplast with a matching stand. Perfect for birthdays, graduations, weddings and quinceañeras.",
+        themes: ["kids birthday", "barbie", "safari", "superhero", "graduation", "wedding"],
+        price: 40.00,
         variants: [
-          { size: "1ft Prop (Mini)", price: 28.00 },
-          { size: "2ft Prop (Small)", price: 38.00 },
-          { size: "3ft Prop (Medium)", price: 55.00 },
-          { size: "4ft Prop (Growth)", price: 85.00 },
-          { size: "5ft Prop (Life-size)", price: 110.00 },
-          { size: "6ft Prop (Grand)", price: 135.00 },
+          { size: "2 ft", price: 40.00 },
+          { size: "3 ft", price: 45.00 },
+          { size: "4 ft", price: 65.00 },
+          { size: "5 ft", price: 85.00 },
+          { size: "6 ft", price: 95.00 },
         ]
       }
     ]
@@ -195,13 +214,20 @@ export const CATEGORIZED_PRODUCTS = {
         name: "Custom Vinyl Floor Wrap",
         category: "Floor",
         image: "/images/floor-wrap-wedding.jpg",
-        description: "Heavy-duty, removable floor vinyl. Scratch-resistant and safe for high-traffic dance floors.",
+        description: "Custom printed floor wraps with non-slip vinyl. Design included. Installation and delivery available at an additional cost.",
         themes: ["wedding", "corporate", "party", "dance"],
+        price: 250.00,
         variants: [
-          { size: "4ft x 3ft Mat", price: 95.00 },
-          { size: "8ft x 8ft Standard", price: 380.00 },
-          { size: "12ft x 12ft Large", price: 850.00 },
-          { size: "20ft x 20ft Grand", price: 2400.00 },
+          { size: "8x8 ft", price: 250.00 },
+          { size: "9x9 ft", price: 280.00 },
+          { size: "10x10 ft", price: 350.00 },
+          { size: "12x12 ft", price: 510.00 },
+          { size: "14x14 ft", price: 750.00 },
+          { size: "15x15 ft", price: 780.00 },
+          { size: "16x16 ft", price: 890.00 },
+          { size: "18x18 ft", price: 1200.00 },
+          { size: "20x20 ft", price: 1700.00 },
+          { size: "12x24 ft", price: 1020.00 },
         ]
       }
     ]
@@ -442,6 +468,279 @@ export const CATEGORIZED_PRODUCTS = {
         rush_price: 15.00,
         rush_label: "Express 2-Day Shipping",
         rush_desc: "Deliver in 2 business days instead of standard 5-7 days."
+      }
+    ]
+  },
+  latexBalloons: {
+    title: "Premium Latex Balloons",
+    description: "Professional-grade latex balloons from SemperTex and TufTex — the brands decorators trust. Ships nationwide, uninflated.",
+    image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+    items: [
+      {
+        id: "sempertex-11in",
+        name: "SemperTex 11\" Latex Balloons",
+        category: "Latex",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "The industry standard. SemperTex natural latex balloons with rich, consistent color — perfect for garlands, arches, bouquets and centerpieces. Ships uninflated.",
+        themes: ["birthday", "wedding", "quinceanera", "graduation", "baby shower", "corporate"],
+        materials: ["Natural Latex", "SemperTex"],
+        fulfillment: "ships",
+        price: 19.99,
+        variants: [
+          { size: "11\" — Pack of 50", price: 11.99 },
+          { size: "11\" — Pack of 100", price: 19.99 }
+        ]
+      },
+      {
+        id: "sempertex-5in",
+        name: "SemperTex 5\" Latex Balloons",
+        category: "Latex",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "Small but mighty. 5\" SemperTex balloons for filling garlands, balloon walls and detailed decor work. Ships uninflated.",
+        themes: ["birthday", "wedding", "quinceanera", "baby shower"],
+        materials: ["Natural Latex", "SemperTex"],
+        fulfillment: "ships",
+        price: 8.99,
+        variants: [
+          { size: "5\" — Pack of 100", price: 8.99 }
+        ]
+      },
+      {
+        id: "sempertex-18in",
+        name: "SemperTex 18\" Latex Balloons",
+        category: "Latex",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "Big statement balloons. 18\" SemperTex rounds for dramatic focal pieces, photo moments and venue entrances. Ships uninflated.",
+        themes: ["birthday", "wedding", "quinceanera", "graduation", "corporate"],
+        materials: ["Natural Latex", "SemperTex"],
+        fulfillment: "ships",
+        price: 14.99,
+        variants: [
+          { size: "18\" — Pack of 25", price: 14.99 }
+        ]
+      },
+      {
+        id: "sempertex-24in",
+        name: "SemperTex 24\" Latex Balloons",
+        category: "Latex",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "Giant 24\" SemperTex balloons — the showstopper for grand entrances, stage decor and unforgettable photos. Ships uninflated.",
+        themes: ["wedding", "quinceanera", "graduation", "corporate", "birthday"],
+        materials: ["Natural Latex", "SemperTex"],
+        fulfillment: "ships",
+        price: 26.99,
+        variants: [
+          { size: "24\" — Pack of 10", price: 26.99 }
+        ]
+      },
+      {
+        id: "sempertex-36in",
+        name: "SemperTex 36\" Jumbo Latex Balloons",
+        category: "Latex",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "The biggest of them all. 36\" jumbo SemperTex balloons for jaw-dropping installs. Ships uninflated.",
+        themes: ["wedding", "quinceanera", "corporate", "birthday"],
+        materials: ["Natural Latex", "SemperTex"],
+        fulfillment: "ships",
+        price: 8.99,
+        variants: [
+          { size: "36\" — Pack of 2", price: 8.99 }
+        ]
+      },
+      {
+        id: "tuftex-11in",
+        name: "TufTex 11\" Latex Balloons",
+        category: "Latex",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "Made in the USA. TufTex balloons are a decorator favorite for their durability and gorgeous matte and pearl finishes. Ships uninflated.",
+        themes: ["birthday", "wedding", "quinceanera", "graduation", "baby shower", "corporate"],
+        materials: ["Natural Latex", "TufTex"],
+        fulfillment: "ships",
+        price: 18.99,
+        variants: [
+          { size: "11\" — Pack of 50", price: 10.99 },
+          { size: "11\" — Pack of 100", price: 18.99 }
+        ]
+      }
+    ]
+  },
+  heliumBalloons: {
+    title: "Helium Balloons — Pickup Only",
+    description: "Fresh helium balloons, inflated in-store and ready for your event. Available for pickup in Arlington, TX only — helium can't ship!",
+    image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+    items: [
+      {
+        id: "helium-latex-bouquet",
+        name: "Helium Latex Bouquet",
+        category: "Helium",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "A hand-tied bouquet of helium-filled latex balloons in your choice of colors. Ready for pickup in Arlington. Order ahead so they're fresh for your event!",
+        themes: ["birthday", "graduation", "baby shower", "anniversary"],
+        materials: ["Latex", "Helium", "Ribbon"],
+        fulfillment: "pickup",
+        price: 24.99,
+        variants: [
+          { size: "Half Dozen (6 balloons)", price: 24.99 },
+          { size: "Dozen (12 balloons)", price: 44.99 }
+        ]
+      },
+      {
+        id: "helium-number-balloons",
+        name: "Helium Number Balloons",
+        category: "Helium",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "Giant foil number balloons filled with helium — the must-have for milestone birthdays and graduations. Pickup in Arlington only.",
+        themes: ["birthday", "graduation", "anniversary"],
+        materials: ["Foil", "Helium"],
+        fulfillment: "pickup",
+        price: 14.99,
+        variants: [
+          { size: "34\" Single Number", price: 14.99 },
+          { size: "34\" Double Numbers", price: 27.99 }
+        ]
+      },
+      {
+        id: "helium-custom-message",
+        name: "Custom Message Helium Balloon",
+        category: "Helium",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "A jumbo latex balloon with your custom message, filled with helium and ready to float. Pickup in Arlington only.",
+        themes: ["birthday", "wedding", "baby shower", "graduation"],
+        materials: ["Latex", "Helium", "Custom Vinyl Lettering"],
+        fulfillment: "pickup",
+        price: 19.99,
+        variants: [
+          { size: "24\" with Custom Message", price: 19.99 }
+        ]
+      }
+    ]
+  },
+  balloonKits: {
+    title: "DIY Balloon Garland Kits",
+    description: "Everything you need to build a stunning balloon garland at home — balloons, strip, glue dots and instructions. Ships nationwide, uninflated.",
+    image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+    items: [
+      {
+        id: "garland-kit-blush-gold",
+        name: "Blush & Gold Garland Kit",
+        category: "DIY Kit",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "The wedding-and-shower favorite. Blush pink, cream and gold chrome balloons with everything you need: balloons, garland strip, glue dots, hand pump and step-by-step instructions. Ships uninflated.",
+        themes: ["wedding", "bridal shower", "baby shower", "quinceanera", "birthday"],
+        materials: ["Latex Balloons", "Garland Strip", "Glue Dots", "Hand Pump", "Instructions"],
+        fulfillment: "ships",
+        price: 49.99,
+        variants: [
+          { size: "6 ft Garland Kit", price: 49.99 },
+          { size: "12 ft Garland Kit", price: 89.99 }
+        ]
+      },
+      {
+        id: "garland-kit-fiesta",
+        name: "Fiesta Brights Garland Kit",
+        category: "DIY Kit",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "Bold, bright and ready to party. Vibrant fiesta colors with balloons, garland strip, glue dots, hand pump and instructions. Ships uninflated.",
+        themes: ["birthday", "fiesta", "graduation", "corporate"],
+        materials: ["Latex Balloons", "Garland Strip", "Glue Dots", "Hand Pump", "Instructions"],
+        fulfillment: "ships",
+        price: 44.99,
+        variants: [
+          { size: "6 ft Garland Kit", price: 44.99 },
+          { size: "12 ft Garland Kit", price: 79.99 }
+        ]
+      },
+      {
+        id: "garland-kit-safari",
+        name: "Safari Wild Garland Kit",
+        category: "DIY Kit",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "Jungle greens, warm neutrals and animal-print accents. Everything included: balloons, garland strip, glue dots, hand pump and instructions. Ships uninflated.",
+        themes: ["birthday", "baby shower"],
+        materials: ["Latex Balloons", "Garland Strip", "Glue Dots", "Hand Pump", "Instructions"],
+        fulfillment: "ships",
+        price: 44.99,
+        variants: [
+          { size: "6 ft Garland Kit", price: 44.99 },
+          { size: "12 ft Garland Kit", price: 79.99 }
+        ]
+      }
+    ]
+  },
+  balloonAccessories: {
+    title: "Balloon Accessories",
+    description: "Pumps, ribbon, weights and stands — everything to inflate, tie and display your balloons like a pro. Ships nationwide.",
+    image: "https://images.unsplash.com/photo-1512909006721-3d6018887383?q=80&w=800",
+    items: [
+      {
+        id: "dual-action-pump",
+        name: "Dual-Action Hand Pump",
+        category: "Accessories",
+        image: "https://images.unsplash.com/photo-1512909006721-3d6018887383?q=80&w=800",
+        description: "Inflates on both push and pull — cut your balloon prep time in half. A must-have for garlands and arches.",
+        themes: ["birthday", "wedding", "quinceanera", "graduation", "corporate"],
+        materials: ["Plastic"],
+        fulfillment: "ships",
+        price: 6.99,
+        variants: [
+          { size: "Single Pump", price: 6.99 }
+        ]
+      },
+      {
+        id: "electric-pump",
+        name: "Electric Balloon Pump",
+        category: "Accessories",
+        image: "https://images.unsplash.com/photo-1512909006721-3d6018887383?q=80&w=800",
+        description: "High-volume electric inflator for big installs. Fills a 11\" balloon in seconds. Perfect for decorators and large events.",
+        themes: ["corporate", "wedding", "quinceanera", "birthday"],
+        materials: ["Electric", "ABS"],
+        fulfillment: "ships",
+        price: 34.99,
+        variants: [
+          { size: "Standard Electric Pump", price: 34.99 }
+        ]
+      },
+      {
+        id: "curling-ribbon",
+        name: "Curling Ribbon Rolls",
+        category: "Accessories",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "Classic curling ribbon for tying bouquets and adding that finished look. Multiple colors available.",
+        themes: ["birthday", "wedding", "graduation", "baby shower"],
+        materials: ["Polypropylene Ribbon"],
+        fulfillment: "ships",
+        price: 4.99,
+        variants: [
+          { size: "Pack of 3 Rolls", price: 4.99 }
+        ]
+      },
+      {
+        id: "balloon-weights",
+        name: "Balloon Weights",
+        category: "Accessories",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "Keep your helium bouquets grounded in style. Decorative weights that match any theme.",
+        themes: ["birthday", "wedding", "graduation", "baby shower"],
+        materials: ["Weighted Base", "Foil Cover"],
+        fulfillment: "ships",
+        price: 7.99,
+        variants: [
+          { size: "Pack of 4 Weights", price: 7.99 }
+        ]
+      },
+      {
+        id: "balloon-stand-kit",
+        name: "Balloon Stand Kit",
+        category: "Accessories",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "Reusable stand kit for tabletop balloon displays — no helium needed. Great for centerpieces and photo backdrops.",
+        themes: ["birthday", "wedding", "quinceanera", "corporate"],
+        materials: ["Plastic Tubes", "Base"],
+        fulfillment: "ships",
+        price: 12.99,
+        variants: [
+          { size: "Tabletop Stand Kit", price: 12.99 }
+        ]
       }
     ]
   }

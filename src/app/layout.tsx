@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import AIAssistant from "../components/AIAssistant";
 import Footer from "../components/Footer";
+import LiveChat from "../components/LiveChat";
 import { ProductProvider } from "../context/ProductContext";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <LiveChat />
         </ProductProvider>
       </body>
     </html>

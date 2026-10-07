@@ -51,8 +51,16 @@ const ProductsPage = () => {
     }
 
     // Only apply theme filtering if we are in backdrops and a theme is active
+    // (tolerant matching: case/whitespace-insensitive, partial names allowed)
     if (activeCategory === 'backdrops' && activeTheme) {
-      items = items.filter(item => item.themes?.includes(activeTheme));
+      const norm = (s: string) => s.toLowerCase().trim();
+      const key = norm(activeTheme);
+      items = items.filter(item =>
+        item.themes?.some((t: string) => {
+          const pt = norm(String(t));
+          return pt === key || pt.includes(key) || key.includes(pt);
+        })
+      );
     }
 
     return items;
@@ -69,10 +77,10 @@ const ProductsPage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-7xl font-black tracking-tight text-[#41137e] mb-6 leading-[1.1]"
             >
-              Explore Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d90082] to-[#7e22ce]">Dynamic Catalog</span>
+              {<>Explore Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d90082] to-[#7e22ce]">Dynamic Catalog</span></>}
             </motion.h1>
             <p className="text-slate-500 text-lg md:text-xl font-medium max-w-2xl mx-auto">
-              Select a category below to discover premium museum-grade event essentials tailored for your next unforgettable moment.
+              'Select a category below to discover premium museum-grade event essentials tailored for your next unforgettable moment.'
             </p>
           </header>
 
@@ -156,7 +164,7 @@ const ProductsPage = () => {
           className="flex items-center gap-2 text-[#41137e] font-bold mb-8 hover:text-[#d90082] transition-colors bg-white px-5 py-2.5 rounded-full shadow-sm hover:shadow-md border border-slate-100 w-fit"
         >
           <ArrowLeft className="w-5 h-5" />
-          Back to Categories
+          'Back to Categories'
         </button>
 
         <header className="mb-12">
@@ -206,7 +214,7 @@ const ProductsPage = () => {
                 : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
               }`}
             >
-              All Themes
+              'All Themes'
             </button>
             {backdropThemes.map(theme => (
               <button 
@@ -241,7 +249,15 @@ const ProductsPage = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ProductCard product={product} onViewDetails={setSelectedProduct} />
+                  <ProductCard
+                    product={product}
+                    onViewDetails={setSelectedProduct}
+                    onAddToCart={(p) => addToCart(p, {
+                      variant: p.variants?.[0],
+                      material: p.materials?.[0] || 'Foamboard',
+                      isRushOrder: false,
+                    })}
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -253,7 +269,7 @@ const ProductsPage = () => {
             </div>
             <h3 className="text-2xl font-bold text-slate-700 mb-2">No items found</h3>
             <p className="text-slate-500">
-              Try adjusting your search or filters to find what you're looking for.
+              "Try adjusting your search or filters to find what you're looking for."
             </p>
           </div>
         )}

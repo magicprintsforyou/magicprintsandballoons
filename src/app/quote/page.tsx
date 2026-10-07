@@ -17,7 +17,7 @@ export default function QuotePage() {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       if (files.length > 10) {
-        alert("Puedes subir un máximo de 10 archivos. / You can upload a maximum of 10 files.");
+        alert("You can upload a maximum of 10 files.");
         setSelectedFiles(files.slice(0, 10));
       } else {
         setSelectedFiles(files);
@@ -105,7 +105,7 @@ export default function QuotePage() {
               Cumpleaños y Baby Showers Grandes
             </h4>
             <p className="text-white/60 text-sm font-light leading-relaxed">
-              También producimos decoraciones completas para eventos sociales premium. Nuestros paquetes de producción completa para cumpleaños y baby showers a gran escala comienzan desde <strong>$2,500 USD</strong>.
+              También producimos decoraciones completas para eventos sociales premium. Pide una cotización personalizada.
             </p>
           </div>
         </div>{/* Right Side: Dynamic Form */}
@@ -125,7 +125,7 @@ export default function QuotePage() {
                 onClick={() => setSuccess(false)}
                 className="text-[#ff2a70] font-bold hover:underline"
               >
-                Send another request
+                'Send another request'
               </button>
             </div>
           ) : (
@@ -156,7 +156,7 @@ export default function QuotePage() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <Phone size={14} /> Phone (WhatsApp)
+                    <Phone size={14} /> 'Phone (WhatsApp)'
                   </label>
                   <input required name="phone" type="tel" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="+1 (555) 000-0000" />
                 </div>
@@ -180,8 +180,9 @@ export default function QuotePage() {
                   <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><Sparkles size={14}/> Presupuesto Estimado / Budget</label>
                   <select required name="budget" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all cursor-pointer">
                     <option value="" disabled selected>Selecciona tu rango de presupuesto...</option>
-                    <option value="bajo_2500">Menos de $2,500 USD</option>
-                    <option value="social_2500_5000">$2,500 - $5,000 USD (Recomendado para Cumpleaños & Baby Showers grandes)</option>
+                    <option value="bajo_1000">Menos de $1,000 USD</option>
+                    <option value="rango_1000_2500">$1,000 - $2,500 USD</option>
+                    <option value="rango_2500_5000">$2,500 - $5,000 USD</option>
                     <option value="medio_5000_10000">$5,000 - $10,000 USD</option>
                     <option value="alto_10000_mas">Más de $10,000 USD</option>
                   </select>

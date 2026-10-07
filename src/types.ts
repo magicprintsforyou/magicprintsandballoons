@@ -18,6 +18,7 @@ export interface Product {
   materials?: string[];
   rush_price?: number;
   paymentLink?: string;
+  fulfillment?: 'ships' | 'pickup' | 'local' | 'both';
 }
 
 export interface CartItem extends Product {

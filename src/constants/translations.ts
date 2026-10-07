@@ -30,9 +30,9 @@ export const translations = {
         },
         hero: {
             welcome: 'By Event Planners, For Event Planners',
-            title: 'HIGH-IMPACT EVENT PRINTS &',
-            title_highlight: 'ON-SITE VENUE SETUP',
-            subtitle: 'Eliminate setup stress. We print, deliver, and install premium backdrops, floor wraps, and custom signs directly at your venue.',
+            title: 'CUSTOM PRINTS &',
+            title_highlight: 'PREMIUM BALLOONS',
+            subtitle: 'Photo boards, cutouts, backdrops, floor wraps — plus SemperTex & TufTex balloons, DIY garland kits and helium balloons. Pickup & delivery in Arlington, shipping nationwide.',
             cta_primary: 'TRY AI MOCKUP',
             cta_secondary: 'EXPLORE CATALOG',
             backgroundImages: [
@@ -51,6 +51,7 @@ export const translations = {
             step3_title: "3. Professional On-Site Setup",
             step3_desc: "Our technical crew delivers, installs, and secures your prints directly at the event space.",
         },
+        // PENDIENTE-DUEÑA: testimonios por verificar (nombres/textos no confirmados por la dueña). No borrar sin su aprobación.
         testimonials: {
             badge: "EVENT DESIGNER REVIEWS",
             title: "Trusted by Top Event Planners",
@@ -198,9 +199,9 @@ export const translations = {
         },
         hero: {
             welcome: 'De Event Planners para Event Planners',
-            title: 'IMPRESIONES DE ALTO IMPACTO E',
-            title_highlight: 'INSTALACIÓN DIRECTA EN VENUE',
-            subtitle: 'Elimina el estrés del montaje. Imprimimos, entregamos e instalamos profesionalmente tus backdrops, vinilos de piso y señalética directamente en tu evento.',
+            title: 'IMPRESIONES PERSONALIZADAS Y',
+            title_highlight: 'GLOBOS PREMIUM',
+            subtitle: 'Photo boards, cutouts, backdrops, floor wraps — más globos SemperTex y TufTex, kits DIY de guirnaldas y globos con helio. Pickup y delivery en Arlington, envíos a todo el país.',
             cta_primary: 'PROBAR MOCKUP IA DE VENUE',
             cta_secondary: 'VER CATÁLOGO',
             backgroundImages: [
@@ -219,6 +220,7 @@ export const translations = {
             step3_title: "3. Instalación Profesional en Venue",
             step3_desc: "Nuestro equipo técnico entrega, monta y asegura tus impresiones directamente en el salón de eventos.",
         },
+        // PENDIENTE-DUEÑA: testimonios por verificar (nombres/textos no confirmados por la dueña). No borrar sin su aprobación.
         testimonials: {
             badge: "OPINIONES DE EVENT PLANNERS",
             title: "La Confianza de los Mejores Diseñadores",

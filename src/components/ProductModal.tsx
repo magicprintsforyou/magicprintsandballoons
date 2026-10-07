@@ -57,8 +57,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
   // Fallback base price if no variants exist
   const basePrice = selectedVariant?.price || product.price || 0;
   const rushSurcharge = 40;
-  const rushLabel = (product as any).rush_label || 'Rush Order Delivery';
-  const rushDesc = (product as any).rush_desc || 'Skip the line. Ships faster.';
+  const rushLabel = (product as any).rush_label || ('Rush Order Delivery');
+  const rushDesc = (product as any).rush_desc || ('Skip the line. Ships faster.');
   const totalPrice = basePrice + (isRushOrder ? rushSurcharge : 0);
 
   if (!isOpen || typeof document === 'undefined') return null;
@@ -116,7 +116,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
             </div>
             {isDesignPreview(displayedImage) && (
               <p className="pt-3 text-center text-xs text-slate-500">
-                Design preview · Your artwork will be customized for your event.
+                'Design preview · Your artwork will be customized for your event.'
               </p>
             )}
             {sizeReference && (
@@ -131,7 +131,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                       !showSizeReference ? 'bg-[#41137e] text-white' : 'text-slate-600 hover:bg-slate-100'
                     }`}
                   >
-                    Product photo
+                    'Product photo'
                   </button>
                   <button
                     type="button"
@@ -142,12 +142,12 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                       showSizeReference ? 'bg-[#41137e] text-white' : 'text-slate-600 hover:bg-slate-100'
                     }`}
                   >
-                    Size reference
+                    'Size reference'
                   </button>
                 </div>
                 {showSizeReference && (
                   <p className="text-center text-[10px] font-semibold text-slate-500">
-                    Illustrative size reference · Height × width · {sizeReference.label}
+                    'Illustrative size reference · Height × width · '{sizeReference.label}
                   </p>
                 )}
               </div>
@@ -236,7 +236,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                   />
                   <Upload size={28} className="mb-3" />
                   <span className="font-bold truncate max-w-[200px]">
-                    {selectedFile ? selectedFile.name : 'Upload Your File'}
+                    {selectedFile ? selectedFile.name : ('Upload Your File')}
                   </span>
                   <span className="text-xs font-medium opacity-70 mt-1">.PDF, .AI, .PSD, .JPG (High Res)</span>
                 </label>
@@ -287,7 +287,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                   }
                 }}
               >
-                {selectedFile ? 'Finalize Quote' : 'Upload File First'}
+                {selectedFile ? ('Finalize Quote') : ('Upload File First')}
               </button>
             </div>
 

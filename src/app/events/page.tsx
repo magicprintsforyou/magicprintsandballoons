@@ -16,7 +16,7 @@ export default function EventsPage() {
     { id: "birthdays", title: language === 'en' ? "Birthdays (Kids & Adults)" : "Cumpleaños (Niños y Adultos)", image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=600", count: "4 themes available", icon: <PartyPopper className="text-white" size={20} /> },
     { id: "babyshowers", title: language === 'en' ? "Baby Showers" : "Baby Showers", image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=600", count: "2 themes available", icon: <Heart className="text-white" size={20} /> },
     { id: "weddings", title: language === 'en' ? "Weddings" : "Bodas", image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600", count: "1 theme available", icon: <Sparkles className="text-white" size={20} /> },
-    { id: "graduations", title: language === 'en' ? "Graduations" : "Graduaciones", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600", count: "1 theme available", icon: <Award className="text-white" size={20} /> },
+    { id: "graduations", title: language === 'en' ? "Graduations" : "Graduaciones", image: "/images/events/graduation.jpg", count: "1 theme available", icon: <Award className="text-white" size={20} /> },
     { id: "churches", title: language === 'en' ? "Churches & Assemblies" : "Iglesias y Asambleas", image: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=600", count: "1 theme available", icon: <MapPin className="text-white" size={20} /> },
     { id: "corporate", title: language === 'en' ? "Corporate & Expos" : "Corporativos y Ferias", image: "https://images.unsplash.com/photo-1431540015161-0bf868a2d407?q=80&w=600", count: "2 themes available", icon: <Briefcase className="text-white" size={20} /> },
     { id: "life", title: language === 'en' ? "Celebrations of Life" : "Memoriales / Vida", image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600", count: "1 theme available", icon: <Clock className="text-white" size={20} /> }
@@ -25,7 +25,7 @@ export default function EventsPage() {
   const occasionThemes: Record<string, { key: string; nameEn: string; nameEs: string; descEn: string; descEs: string; image: string }[]> = {
     "birthdays": [
       { key: "barbie", nameEn: "Barbie Pink World", nameEs: "Mundo Rosa Barbie", descEn: "Glitz, glam, and bright pink layouts.", descEs: "Brillos, glamour y decorados color rosa brillante.", image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600" },
-      { key: "safari", nameEn: "Jungle Safari Adventure", nameEs: "Aventura Safari en la Selva", descEn: "Organic green tones and animal cutouts.", descEs: "Tonos verdes orgánicos y figuras de animales.", image: "https://images.unsplash.com/photo-1530103043960-ef38714abb15?q=80&w=600" },
+      { key: "safari", nameEn: "Jungle Safari Adventure", nameEs: "Aventura Safari en la Selva", descEn: "Organic green tones and animal cutouts.", descEs: "Tonos verdes orgánicos y figuras de animales.", image: "/images/events/jungle-safari.jpg" },
       { key: "superhero", nameEn: "Superhero Power", nameEs: "Poder Superhero", descEn: "Comic banners and hero stands.", descEs: "Banners de cómics y soportes de héroes.", image: "https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=600" },
       { key: "birthday", nameEn: "General Birthday Sparkle", nameEs: "Cumpleaños Clásico", descEn: "Banners and photo boards for all ages.", descEs: "Banners y photo boards para todas las edades.", image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=600" }
     ],
@@ -37,7 +37,7 @@ export default function EventsPage() {
       { key: "wedding", nameEn: "Elegant White & Floral", nameEs: "Elegancia Blanca y Floral", descEn: "Lace arches, floral patterns, and golden lettering.", descEs: "Arcos de encaje, patrones florales y letras doradas.", image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600" }
     ],
     "graduations": [
-      { key: "graduation", nameEn: "Gold & Black Achievements", nameEs: "Logros Oro y Negro", descEn: "Gowns, caps, diplomas, and victory walls.", descEs: "Togas, birretes, diplomas y muros de victoria.", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600" }
+      { key: "graduation", nameEn: "Gold & Black Achievements", nameEs: "Logros Oro y Negro", descEn: "Gowns, caps, diplomas, and victory walls.", descEs: "Togas, birretes, diplomas y muros de victoria.", image: "/images/events/graduation.jpg" }
     ],
     "churches": [
       { key: "wedding", nameEn: "Sacred & Classic Backdrops", nameEs: "Fondos Clásicos y Sagrados", descEn: "Custom prints for religious assemblies.", descEs: "Impresiones personalizadas para asambleas religiosas.", image: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=600" }
@@ -51,12 +51,24 @@ export default function EventsPage() {
     ]
   };
 
+  // Tolerant theme matching: ignores case/whitespace and matches partial
+  // theme names (e.g. key "birthday" also matches product theme "kids birthday").
+  const themeMatches = (productThemes: string[] | undefined, themeKey: string) => {
+    if (!productThemes || !themeKey) return false;
+    const norm = (s: string) => s.toLowerCase().trim();
+    const key = norm(themeKey);
+    return productThemes.some(t => {
+      const pt = norm(String(t));
+      return pt === key || pt.includes(key) || key.includes(pt);
+    });
+  };
+
   const themeProducts = React.useMemo(() => {
     if (!selectedTheme || !catalog) return [];
     const products: any[] = [];
     Object.values(catalog).forEach(cat => {
       cat.items.forEach(prod => {
-        if (prod.themes && prod.themes.includes(selectedTheme)) {
+        if (themeMatches(prod.themes, selectedTheme)) {
           products.push(prod);
         }
       });

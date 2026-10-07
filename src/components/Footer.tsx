@@ -27,14 +27,14 @@ export default function ClientFooter() {
                 <div className="space-y-6">
                     <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#ffcc00]">{t?.footer?.contact || 'Contact'}</h4>
                     <ul className="space-y-4 text-sm font-bold text-gray-400">
-                        <li>✉️ <a href="mailto:sales@magicprintsforyou.com" className="hover:text-white transition-colors">{t?.footer?.email || 'sales@magicprintsforyou.com'}</a></li>
+                        <li><span className="text-[#ffcc00]">Email: </span><a href="mailto:sales@magicprintsforyou.com" className="hover:text-white transition-colors">{t?.footer?.email || 'sales@magicprintsforyou.com'}</a></li>
                         <li>
                             <a href="/quote" className="hover:text-white transition-colors flex items-center gap-2">
                                 Request a quote
                             </a>
                         </li>
                         <li className="flex items-start gap-2">
-                            <span className="text-purple-400">📍</span>
+                            <span className="text-[#ffcc00] font-black">•</span>
                             <span>{t?.footer?.address || ''}</span>
                         </li>
                     </ul>

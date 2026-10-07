@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Product } from '../types';
 
 interface ProductCardProps {
@@ -8,6 +8,16 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewDetails }) => {
+  const [justAdded, setJustAdded] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleAdd = () => {
+    if (!onAddToCart) return;
+    onAddToCart(product);
+    setJustAdded(true);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setJustAdded(false), 1800);
+  };
   return (
     <div className="group bg-white rounded-[28px] border border-purple-100 overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
       <button
@@ -23,15 +33,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewD
           decoding="async"
           className="w-full h-full object-contain rounded-2xl"
         />
-        <div className="absolute top-5 left-5">
+        <div className="absolute top-5 left-5 flex flex-col gap-2">
           <span className="px-3 py-1.5 bg-white/95 text-[10px] font-bold tracking-wide rounded-full text-[#41137e] shadow-sm uppercase border border-purple-100">
             {product.category}
           </span>
+          {product.fulfillment === 'pickup' && (
+            <span className="px-3 py-1.5 bg-amber-500/95 text-[10px] font-bold tracking-wide rounded-full text-white shadow-sm uppercase">
+              Pickup Only
+            </span>
+          )}
+          {product.fulfillment === 'ships' && (
+            <span className="px-3 py-1.5 bg-emerald-500/95 text-[10px] font-bold tracking-wide rounded-full text-white shadow-sm uppercase">
+              Ships Nationwide
+            </span>
+          )}
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-end p-12">
            <div className="transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700">
               <span className="text-white font-black text-xl tracking-tighter flex items-center gap-3">
-                VIEW DETAILS <span className="text-2xl animate-sparkle">✨</span>
+                VER DETALLES
               </span>
            </div>
         </div>
@@ -45,7 +65,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewD
           >
             {product.name}
           </h3>
-          <p className="text-slate-500 font-semibold text-xs">Custom printed for your event</p>
+          <p className="text-slate-500 font-semibold text-xs">Impreso a tu medida para tu evento</p>
         </div>
         
         <p className="text-slate-600 font-medium text-sm line-clamp-2 mb-6 leading-relaxed">
@@ -54,14 +74,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onViewD
         
         <div className="flex items-center justify-between pt-4 border-t border-gray-50">
            <div className="flex flex-col">
-              <span className="text-[8px] font-black text-gray-300 tracking-[0.3em] uppercase mb-0.5">Starting From</span>
+              <span className="text-[8px] font-black text-gray-300 tracking-[0.3em] uppercase mb-0.5">Desde</span>
               <span className="text-2xl font-black text-[#00bff3] tracking-tighter">${(product.price || (product.variants?.[0]?.price || 0)).toFixed(0)}</span>
            </div>
-           <button 
-            onClick={() => onAddToCart && onAddToCart(product)}
-            className="px-5 py-3.5 bg-[#41137e] text-white rounded-full font-black text-[9px] tracking-widest hover:bg-[#d90082] transition-all active:scale-95 duration-500 shadow-lg"
+           <button
+            onClick={handleAdd}
+            disabled={!onAddToCart}
+            className={`px-5 py-3.5 text-white rounded-full font-black text-[9px] tracking-widest transition-all active:scale-95 duration-500 shadow-lg ${
+              justAdded
+                ? 'bg-emerald-600'
+                : 'bg-[#41137e] hover:bg-[#d90082]'
+            } ${!onAddToCart ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            ADD TO QUOTE
+            {justAdded ? 'ADDED ✓' : 'ADD TO QUOTE'}
           </button>
         </div>
       </div>

@@ -117,7 +117,7 @@ export default function BespokeForm() {
                </div>
                <div>
                  <h3 className="text-xl font-bold text-white mb-2">{language === 'en' ? 'Large Birthdays & Baby Showers' : 'Cumpleaños y Baby Showers Grandes'}</h3>
-                 <p className="text-white/60 font-light leading-relaxed">{language === 'en' ? 'We also create complete decor packages for large birthdays and baby showers. Ask for a custom quote.' : <>También producimos decoraciones completas para eventos sociales premium. Nuestros paquetes de producción completa para cumpleaños y baby showers a gran escala comienzan desde <strong>$2,500 USD</strong>.</>}</p>
+                 <p className="text-white/60 font-light leading-relaxed">{language === 'en' ? 'We also create complete decor packages for large birthdays and baby showers. Ask for a custom quote.' : <>También producimos decoraciones completas para eventos sociales premium. Pide una cotización personalizada.</>}</p>
                </div>
             </div>
           </div>
@@ -218,8 +218,9 @@ export default function BespokeForm() {
                     <label className="text-sm font-bold text-white/80 flex items-center gap-2"><Sparkles size={14}/> {language === 'en' ? 'Estimated Budget' : 'Presupuesto Estimado'}</label>
                     <select required name="budget" className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-[#0f172a] transition-all cursor-pointer">
                       <option value="" disabled selected>{language === 'en' ? 'Select your budget range...' : 'Selecciona tu rango de presupuesto...'}</option>
-                      <option value="bajo_2500">{language === 'en' ? 'Under $2,500 USD' : 'Menos de $2,500 USD'}</option>
-                      <option value="social_2500_5000">{language === 'en' ? '$2,500–$5,000 USD' : '$2,500 - $5,000 USD (Recomendado para Cumpleaños & Baby Showers grandes)'}</option>
+                      <option value="bajo_1000">{language === 'en' ? 'Under $1,000 USD' : 'Menos de $1,000 USD'}</option>
+                      <option value="rango_1000_2500">{language === 'en' ? '$1,000–$2,500 USD' : '$1,000 - $2,500 USD'}</option>
+                      <option value="rango_2500_5000">{language === 'en' ? '$2,500–$5,000 USD' : '$2,500 - $5,000 USD'}</option>
                       <option value="medio_5000_10000">$5,000 - $10,000 USD</option>
                       <option value="alto_10000_mas">{language === 'en' ? 'Over $10,000 USD' : 'Más de $10,000 USD'}</option>
                     </select>

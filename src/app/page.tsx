@@ -10,6 +10,8 @@ import ProductCard from '@/components/ProductCard';
 import ProductModal from '@/components/ProductModal';
 import Logo from '@/components/Logo';
 import BespokeForm from '@/components/BespokeForm';
+import Reviews from '@/components/Reviews';
+import EmailCapture from '@/components/EmailCapture';
 import { useLanguage } from '@/context/ProductContext';
 import { motion } from 'framer-motion';
 import { 
@@ -19,7 +21,7 @@ import {
 
 export default function Home() {
   const { t, language } = useLanguage();
-  const { catalog } = useProducts();
+  const { catalog, addToCart } = useProducts();
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showHeroLogo, setShowHeroLogo] = useState(true);
@@ -226,6 +228,48 @@ export default function Home() {
       </section>
 
       <div className="max-w-7xl mx-auto px-6"><AIInspirationMockup /></div>
+
+      {/* Balloons Banner — festive promo section */}
+      <section className="py-24 px-6 relative z-10 overflow-hidden" style={{ background: 'linear-gradient(135deg, #d90082 0%, #7e22ce 50%, #0ea5e9 100%)' }}>
+        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, white 8%, transparent 9%), radial-gradient(circle at 70% 60%, white 6%, transparent 7%), radial-gradient(circle at 40% 80%, white 10%, transparent 11%), radial-gradient(circle at 85% 20%, white 7%, transparent 8%)', backgroundSize: '220px 220px' }}></div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-[#ffcc00] font-black uppercase tracking-[0.3em] text-xs mb-4">New at magicprintsandballoons</p>
+              <h2 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter mb-6 leading-none">
+                Balloons<br />for every<br />party
+              </h2>
+              <p className="text-white/80 text-lg font-light italic leading-relaxed mb-8">
+                Premium SemperTex &amp; TufTex latex, DIY garland kits that ship nationwide, and fresh helium balloons ready for pickup in Arlington.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/products" className="px-10 py-4 bg-white text-[#d90082] rounded-full font-black text-lg hover:scale-105 transition-all shadow-xl">
+                  Shop Balloons
+                </Link>
+                <Link href="/products" className="px-10 py-4 bg-white/15 text-white border border-white/30 rounded-full font-black text-lg hover:scale-105 transition-all backdrop-blur-md">
+                  DIY Garland Kits
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { img: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=600", label: "SemperTex Latex" },
+                { img: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=600", label: "DIY Garland Kits" },
+                { img: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=600", label: "Helium — Pickup Only" },
+                { img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=600", label: "TufTex Latex" }
+              ].map((b, i) => (
+                <div key={i} className="group relative rounded-3xl overflow-hidden aspect-square shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                  <img src={b.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={b.label} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-white font-black text-sm uppercase tracking-tight">{b.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
       {/* The Magic Process */}
       <section className="py-32 bg-[#0A0212] px-6 rounded-t-[50px] md:rounded-t-[100px] rounded-b-[100px] relative overflow-hidden shadow-2xl z-20 border-t border-b border-white/5">
         <div className="absolute top-0 right-0 p-20 opacity-5 text-[200px] select-none pointer-events-none">✨</div>
@@ -281,8 +325,13 @@ export default function Home() {
             {bestSellers.map(product => (
               <ProductCard
                 key={product.id}
-                  product={product} 
+                  product={product}
                   onViewDetails={setSelectedProduct}
+                  onAddToCart={(prod) => addToCart(prod, {
+                    variant: prod.variants?.[0],
+                    material: prod.materials?.[0] || 'Foamboard',
+                    isRushOrder: false,
+                  })}
                 />
             ))}
           </div>
@@ -371,6 +420,24 @@ export default function Home() {
         <div className="absolute inset-0 bg-spiral-float opacity-5 -z-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-screen"></div>
         <BespokeForm />
       </div>
+
+      {/* Reviews Section */}
+      <Reviews />
+
+      {/* Email Capture Section */}
+      <EmailCapture />
+
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          isOpen={!!selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={(product, config) => {
+            addToCart(product, config);
+            setSelectedProduct(null);
+          }}
+        />
+      )}
     </div>
   );
 }
