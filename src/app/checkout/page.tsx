@@ -1,8 +1,13 @@
 "use client";
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShoppingBag, ChevronRight, User, Mail, Phone, Calendar, MapPin, Truck, Clock, Tag, Sparkles, Paperclip, X } from 'lucide-react';
+import { ShoppingBag, ChevronRight, User, Mail, Phone, Calendar, MapPin, Truck, Clock, Tag, Sparkles, Paperclip, X, ArrowLeft } from 'lucide-react';
 import { useLanguage, useProducts } from '@/context/ProductContext';
+import SquarePaymentForm from '@/components/SquarePaymentForm';
+
+const SQUARE_APP_ID = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID || '';
+const SQUARE_LOCATION_ID = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID || '';
+const SQUARE_CONFIGURED = Boolean(SQUARE_APP_ID && SQUARE_LOCATION_ID && !SQUARE_APP_ID.startsWith('REPLACE_'));
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -11,6 +16,11 @@ export default function CheckoutPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [paidAmount, setPaidAmount] = useState(0);
+  const [paymentId, setPaymentId] = useState('');
+  const idempotencyKeyRef = useRef<string>('');
 
   // Form Fields
   const [name, setName] = useState('');
@@ -62,18 +72,77 @@ export default function CheckoutPage() {
     }
   }, [cart, success, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Step 1: validate the form, then reveal the in-page Square card form
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setPaymentError(null);
+    if (!SQUARE_CONFIGURED) {
+      // Fallback: legacy flow (order email, payment link later)
+      void submitLegacyOrder();
+      return;
+    }
+    // Generate one idempotency key per checkout attempt
+    idempotencyKeyRef.current = `mpb-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    setShowPayment(true);
+    setTimeout(() => {
+      document.getElementById('square-payment-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  };
 
+  const buildPaymentPayload = (sourceId: string) => ({
+    sourceId,
+    idempotencyKey: idempotencyKeyRef.current,
+    promoCode: promoApplied ? promoCode : undefined,
+    customer: {
+      name,
+      email,
+      phone,
+      eventDate,
+      deliveryMethod,
+      shippingAddress: (deliveryMethod === 'delivery' || deliveryMethod === 'shipping') ? shippingAddress : 'Store Pickup / Arlington DFW',
+      notes: notes + (selectedFiles.length > 0 ? `\n\nArchivos de Arte / Artwork Files: ${selectedFiles.map(f => f.name).join(', ')}` : ''),
+    },
+    items: cart.map((item) => ({
+      productId: item.product.id,
+      variantSize: item.config?.variant?.size || null,
+      material: item.config?.material || null,
+      isRushOrder: !!item.config?.isRushOrder,
+      quantity: item.quantity,
+    })),
+  });
+
+  // Step 2: Square token received → charge server-side
+  const processSquarePayment = async (token: string) => {
+    setIsSubmitting(true);
+    setPaymentError(null);
     try {
-      // 1. Upload artwork files if any (using base64 embed approach - no server needed)
+      const res = await fetch('/api/payments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildPaymentPayload(token)),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result?.error || 'Payment failed. Please try again.');
+      }
+      setPaidAmount(result.amountCharged || finalTotal);
+      setPaymentId(result.paymentId || '');
+      setSuccess(true);
+      clearCart();
+    } catch (err: any) {
+      setPaymentError(err?.message || (language === 'en' ? 'Payment failed. Please try again.' : 'El pago falló. Intenta de nuevo.'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Legacy fallback when Square is not configured: order email + payment link later
+  const submitLegacyOrder = async () => {
+    setIsSubmitting(true);
+    try {
       const fileUrls: string[] = [];
-      // For now we embed file names; they are referenced in the email body
-      // (Full file upload requires a storage service configured separately)
       const fileNames = selectedFiles.map(f => f.name).join(', ');
 
-      // 2. Send order email
       const payload = {
         name,
         email,
@@ -123,12 +192,16 @@ export default function CheckoutPage() {
             <Sparkles size={40} className="animate-pulse" />
           </div>
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mb-6 leading-none text-[#ffcc00]">
-            {language === 'en' ? 'Order Submitted!' : '¡Orden Recibida!'}
+            {language === 'en' ? (paymentId ? 'Payment Received!' : 'Order Submitted!') : (paymentId ? '¡Pago Recibido!' : '¡Orden Recibida!')}
           </h1>
           <p className="text-gray-300 text-lg font-light leading-relaxed mb-8">
-            {language === 'en' 
-              ? 'Thank you for choosing Magic Prints. We will confirm item availability and send your custom payment link within less than 24 hours via email or WhatsApp.'
-              : 'Gracias por elegir Magic Prints. Confirmaremos la disponibilidad de tus productos e instalación, y te enviaremos tu enlace de pago personalizado en menos de 24 horas por correo o WhatsApp.'}
+            {paymentId
+              ? (language === 'en'
+                  ? `Thank you! Your payment of $${paidAmount.toFixed(2)} was received. We'll start working on your order and contact you about your event date and pickup/delivery details.`
+                  : `¡Gracias! Recibimos tu pago de $${paidAmount.toFixed(2)}. Empezaremos a trabajar en tu orden y te contactaremos sobre la fecha del evento y los detalles de pickup/delivery.`)
+              : (language === 'en'
+                ? 'Thank you for choosing Magic Prints. We will confirm item availability and send your custom payment link within less than 24 hours via email or WhatsApp.'
+                : 'Gracias por elegir Magic Prints. Confirmaremos la disponibilidad de tus productos e instalación, y te enviaremos tu enlace de pago personalizado en menos de 24 horas por correo o WhatsApp.')}
           </p>
           <button 
             onClick={() => router.push('/')}
@@ -215,11 +288,49 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full py-5 bg-gradient-to-r from-[#cc004e] via-[#d90082] to-[#41137e] text-white rounded-full font-black text-sm tracking-widest uppercase hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_40px_rgba(217,0,130,0.3)] mt-8"
+              disabled={isSubmitting || showPayment}
+              className="w-full py-5 bg-gradient-to-r from-[#cc004e] via-[#d90082] to-[#41137e] text-white rounded-full font-black text-sm tracking-widest uppercase hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_40px_rgba(217,0,130,0.3)] mt-8 disabled:opacity-60"
             >
-              {isSubmitting ? (language === 'en' ? 'Processing...' : 'Procesando...') : (language === 'en' ? 'Confirm Order & Request Link' : 'Confirmar Orden y Solicitar Pago')}
+              {isSubmitting
+                ? (language === 'en' ? 'Processing...' : 'Procesando...')
+                : showPayment
+                  ? (language === 'en' ? 'Complete Payment Below' : 'Completa el Pago Abajo')
+                  : (SQUARE_CONFIGURED
+                      ? (language === 'en' ? 'Continue to Payment' : 'Continuar al Pago')
+                      : (language === 'en' ? 'Confirm Order & Request Link' : 'Confirmar Orden y Solicitar Pago'))}
             </button>
+
+            {/* In-page Square payment section */}
+            {showPayment && SQUARE_CONFIGURED && (
+              <div id="square-payment-section" className="mt-8 p-6 rounded-2xl bg-white text-slate-900 border border-slate-200 shadow-xl">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-black uppercase tracking-wide text-sm">
+                    {language === 'en' ? 'Payment' : 'Pago'}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowPayment(false)}
+                    className="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1"
+                  >
+                    <ArrowLeft size={12} /> {language === 'en' ? 'Edit details' : 'Editar datos'}
+                  </button>
+                </div>
+                {paymentError && (
+                  <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                    {paymentError}
+                  </div>
+                )}
+                <SquarePaymentForm
+                  amount={finalTotal}
+                  applicationId={SQUARE_APP_ID}
+                  locationId={SQUARE_LOCATION_ID}
+                  language={language}
+                  disabled={isSubmitting}
+                  onPaymentSuccess={processSquarePayment}
+                  onPaymentError={(msg) => setPaymentError(msg)}
+                />
+              </div>
+            )}
 
           </form>
         </div>
