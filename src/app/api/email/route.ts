@@ -38,7 +38,7 @@ export async function POST(req: Request) {
                 <td style="padding: 10px; border: 1px solid #e5e7eb; font-size: 11px; color: #4b5563;">
                   Size: ${item.config?.variant?.size || 'Default'}<br>
                   Material: ${item.config?.material || 'N/A'}<br>
-                  Rush: ${item.config?.isRushOrder ? 'Sí / Yes' : 'No'}${item.config?.artworkName ? `<br>Artwork: ${item.config.artworkName}` : ''}
+                  Rush: ${item.config?.isRushOrder ? 'Sí / Yes' : 'No'}${item.config?.artworkName ? `<br>Artwork: ${item.config.artworkName}` : ''}${item.config?.customText ? `<br>Custom text: "${item.config.customText}"` : ''}
                 </td>
                 <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: center;">${item.quantity}</td>
                 <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: right; font-weight: bold;">$${(item.price * item.quantity).toFixed(2)}</td>

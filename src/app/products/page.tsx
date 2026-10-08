@@ -42,7 +42,7 @@ const HELIUM_IMG = "https://images.unsplash.com/photo-1525268323446-0505b6fe7778
 const NAV_TREE: Record<string, NavNode> = {
   balloons: {
     title: "Balloons",
-    description: "Shop like the pros: latex by brand, foil by theme, DIY kits, helium & accessories.",
+    description: "Shop like the pros: latex by brand, foil by theme, DIY kits, helium, accessories & special balloons.",
     image: LATEX_IMG,
     icon: <PartyPopper className="w-8 h-8 md:w-12 md:h-12" />,
     children: {
@@ -99,6 +99,13 @@ const NAV_TREE: Record<string, NavNode> = {
         description: "Pumps, ribbon, weights and stands — display like a pro.",
         catalogKeys: ["balloonAccessories"],
       },
+      special: {
+        title: "Special Balloons",
+        description: "Modeling, bubble & personalized balloons for extra wow.",
+        image: "https://images.pexels.com/photos/30669732/pexels-photo-30669732.jpeg?auto=compress&cs=tinysrgb&w=800",
+        icon: <Sparkles className="w-8 h-8 md:w-12 md:h-12" />,
+        catalogKeys: ["specialBalloons"],
+      },
     },
   },
   prints: {
@@ -133,6 +140,7 @@ const SUB_ICONS: Record<string, React.ReactNode> = {
   holiday: <Snowflake className="w-8 h-8 md:w-12 md:h-12" />,
   individual: <PartyPopper className="w-8 h-8 md:w-12 md:h-12" />,
   bunches: <PartyPopper className="w-8 h-8 md:w-12 md:h-12" />,
+  special: <Sparkles className="w-8 h-8 md:w-12 md:h-12" />,
   sempertex: <Star className="w-8 h-8 md:w-12 md:h-12" />,
   tuftex: <Star className="w-8 h-8 md:w-12 md:h-12" />,
 };
@@ -436,11 +444,15 @@ const ProductsPageInner = () => {
                   <ProductCard
                     product={product}
                     onViewDetails={setSelectedProduct}
-                    onAddToCart={(p) => addToCart(p, {
-                      variant: p.variants?.[0],
-                      material: p.materials?.[0] || 'Foamboard',
-                      isRushOrder: false,
-                    })}
+                    onAddToCart={(p) => {
+                      // Products needing custom text (e.g. personalized balloon) must go through the modal
+                      if ((p as any).customTextLabel) { setSelectedProduct(p); return; }
+                      addToCart(p, {
+                        variant: p.variants?.[0],
+                        material: p.materials?.[0] || 'Foamboard',
+                        isRushOrder: false,
+                      });
+                    }}
                   />
                 </motion.div>
               ))}

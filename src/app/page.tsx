@@ -226,11 +226,14 @@ export default function Home() {
                 key={product.id}
                 product={product}
                 onViewDetails={setSelectedProduct}
-                onAddToCart={(prod) => addToCart(prod, {
-                  variant: prod.variants?.[0],
-                  material: prod.materials?.[0] || 'Foamboard',
-                  isRushOrder: false,
-                })}
+                onAddToCart={(prod) => {
+                  if ((prod as any).customTextLabel) { setSelectedProduct(prod); return; }
+                  addToCart(prod, {
+                    variant: prod.variants?.[0],
+                    material: prod.materials?.[0] || 'Foamboard',
+                    isRushOrder: false,
+                  });
+                }}
               />
             ))}
           </div>

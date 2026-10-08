@@ -20,6 +20,7 @@ export interface Product {
   rush_price?: number;
   paymentLink?: string;
   fulfillment?: 'ships' | 'pickup' | 'local' | 'both';
+  customTextLabel?: string;
 }
 
 export interface CartItem extends Product {

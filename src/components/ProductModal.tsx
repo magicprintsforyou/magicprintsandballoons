@@ -48,6 +48,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
   const [isRushOrder, setIsRushOrder] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showSizeReference, setShowSizeReference] = useState<boolean>(true);
+  const [customText, setCustomText] = useState<string>("");
+  const needsCustomText = !!(product as any).customTextLabel;
 
   const sizeReference = SIZE_REFERENCE_PRODUCTS.has(product.id)
     ? getSizeReference(selectedVariant?.size)
@@ -60,7 +62,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
   const BALLOON_CATEGORIES = new Set([
     'SemperTex', 'TufTex', 'Numbers', 'Letters', 'Shapes',
     'Birthday', 'Baby Shower', 'Wedding', 'Holiday',
-    'DIY Kit', 'Individual', 'Bunches', 'Accessories'
+    'DIY Kit', 'Individual', 'Bunches', 'Accessories', 'Special'
   ]);
   const isSimpleProduct = BALLOON_CATEGORIES.has(product.category);
   const rushSurcharge = 40;
@@ -196,6 +198,22 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                 </div>
               )}
 
+              {/* Custom text input (e.g. personalized balloon name) */}
+              {needsCustomText && (
+              <div>
+                <label htmlFor={`product-customtext-${product.id}`} className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">{(product as any).customTextLabel}</label>
+                <input
+                  id={`product-customtext-${product.id}`}
+                  type="text"
+                  value={customText}
+                  onChange={(e) => setCustomText(e.target.value)}
+                  placeholder="Type the name or message..."
+                  maxLength={30}
+                  className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-slate-800 font-bold outline-none focus:border-[#d90082] transition-colors placeholder:text-slate-300 placeholder:font-medium"
+                />
+              </div>
+              )}
+
               {/* Material Dropdown — hidden for balloons/accessories */}
               {!isSimpleProduct && (
               <div>
@@ -286,21 +304,22 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                </div>
                <button 
                 className={`flex-grow py-5 text-white rounded-full font-black text-sm tracking-widest uppercase transition-all shadow-xl flex items-center justify-center gap-2 ${
-                  (isSimpleProduct || selectedFile) ? 'bg-[#d90082] hover:bg-[#ff2a70] hover:scale-105 active:scale-95' : 'bg-slate-300 cursor-not-allowed'
+                  ((isSimpleProduct || selectedFile) && (!needsCustomText || customText.trim())) ? 'bg-[#d90082] hover:bg-[#ff2a70] hover:scale-105 active:scale-95' : 'bg-slate-300 cursor-not-allowed'
                 }`}
                 onClick={() => {
-                  if ((isSimpleProduct || selectedFile) && onAddToCart) {
+                  if ((isSimpleProduct || selectedFile) && (!needsCustomText || customText.trim()) && onAddToCart) {
                     onAddToCart(product, { 
                       variant: selectedVariant, 
                       material, 
                       isRushOrder,
-                      artworkName: selectedFile?.name || null
+                      artworkName: selectedFile?.name || null,
+                      customText: needsCustomText ? customText.trim() : null
                     });
                     onClose();
                   }
                 }}
               >
-                {(isSimpleProduct || selectedFile) ? ('Add to Cart') : ('Upload File First')}
+                {((isSimpleProduct || selectedFile) && (!needsCustomText || customText.trim())) ? ('Add to Cart') : (needsCustomText && !customText.trim() ? ('Type Your Text First') : ('Upload File First'))}
               </button>
             </div>
 

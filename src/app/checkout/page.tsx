@@ -539,6 +539,11 @@ export default function CheckoutPage() {
                         File: {(item.config as any).artworkName}
                       </p>
                     )}
+                    {(item.config as any)?.customText && (
+                      <p className="text-[10px] text-white/50 mt-1 italic truncate max-w-[250px]">
+                        Text: "{(item.config as any).customText}"
+                      </p>
+                    )}
                     {item.config?.isRushOrder && (
                       <span className="inline-block mt-2 text-[8px] bg-red-950 text-red-400 font-bold uppercase px-2 py-0.5 rounded border border-red-800/30">
                         Rush Order (+24-48h)

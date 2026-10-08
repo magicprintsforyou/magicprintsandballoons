@@ -991,6 +991,77 @@ export const CATEGORIZED_PRODUCTS = {
         variants: [
           { size: "Tabletop Stand Kit", price: 12.99 }
         ]
+      },
+      {
+        id: "balloon-clips",
+        name: "Balloon Clips & Ties",
+        category: "Accessories",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "Quick-seal clips that tie off latex balloons in seconds — no knots, no sore fingers. Perfect for garlands and large installs.",
+        themes: ["birthday", "wedding", "quinceanera", "graduation", "corporate"],
+        materials: ["Plastic"],
+        fulfillment: "ships",
+        price: 3.99,
+        variants: [
+          { size: "Pack of 50 Clips", price: 3.99 }
+        ]
+      }
+    ]
+  },
+  specialBalloons: {
+    title: "Special Balloons",
+    description: "Modeling balloons, clear bubble balloons and personalized balloons — for that extra wow.",
+    image: "https://images.pexels.com/photos/30669732/pexels-photo-30669732.jpeg?auto=compress&cs=tinysrgb&w=800",
+    items: [
+      {
+        id: "modeling-balloons-260q",
+        name: "260Q Modeling Balloons",
+        category: "Special",
+        variantLabel: "Choose Pack",
+        image: "https://images.pexels.com/photos/30669732/pexels-photo-30669732.jpeg?auto=compress&cs=tinysrgb&w=800",
+        description: "The long twisting balloons for balloon animals, flowers and sculptures. Professional-quality 260Q latex in assorted bright colors. Ships uninflated.",
+        themes: ["birthday", "corporate", "baby shower"],
+        materials: ["Natural Latex"],
+        fulfillment: "ships",
+        price: 7.99,
+        variants: [
+          { size: "Pack of 50", price: 7.99 },
+          { size: "Pack of 100", price: 13.99 }
+        ]
+      },
+      {
+        id: "bubble-balloons-clear",
+        name: "Clear Bubble Balloons",
+        category: "Special",
+        variantLabel: "Choose Pack",
+        image: "https://images.pexels.com/photos/13939418/pexels-photo-13939418.jpeg?auto=compress&cs=tinysrgb&w=800",
+        description: "Crystal-clear plastic bubble balloons — stuff them with confetti, feathers or smaller balloons for a stunning effect. Extra wide neck, easy to fill. Ships uninflated.",
+        themes: ["birthday", "wedding", "baby shower", "quinceanera", "gender reveal"],
+        materials: ["Clear Plastic"],
+        fulfillment: "ships",
+        price: 12.99,
+        variants: [
+          { size: "Pack of 6 (24\")", price: 12.99 },
+          { size: "Pack of 12 (24\")", price: 22.99 }
+        ]
+      },
+      {
+        id: "personalized-foil-balloon",
+        name: "Personalized Foil Balloon",
+        category: "Special",
+        variantLabel: "Choose Shape",
+        image: "https://images.pexels.com/photos/10390898/pexels-photo-10390898.jpeg?auto=compress&cs=tinysrgb&w=800",
+        description: "An 18\" foil balloon with YOUR name or message in vinyl lettering — star, heart or round. Filled with helium and ready to float for days. Pickup in Arlington only.",
+        themes: ["birthday", "graduation", "baby shower", "wedding", "anniversary"],
+        materials: ["Foil", "Helium", "Vinyl Lettering"],
+        fulfillment: "pickup",
+        price: 16.99,
+        customTextLabel: "Name or message for your balloon",
+        variants: [
+          { size: "18\" Star with Name", price: 16.99 },
+          { size: "18\" Heart with Name", price: 16.99 },
+          { size: "18\" Round with Name", price: 16.99 }
+        ]
       }
     ]
   }
