@@ -67,7 +67,7 @@ function isValidEmail(email: string) {
 export async function POST(req: Request) {
   try {
     const accessToken = process.env.SQUARE_ACCESS_TOKEN;
-    const locationId = process.env.SQUARE_LOCATION_ID;
+    const locationId = process.env.SQUARE_LOCATION_ID || process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
     const environment = (process.env.SQUARE_ENVIRONMENT || 'sandbox').toLowerCase();
 
     if (!accessToken || accessToken.startsWith('REPLACE_')) {
