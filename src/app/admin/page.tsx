@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Upload, Sparkles, Save, Edit2, Image as ImageIcon, CheckCircle2, Package, Tag, Layers, FolderPlus, Building2, AlertCircle, LogOut, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Upload, Sparkles, Save, Edit2, Image as ImageIcon, CheckCircle2, Package, Tag, Layers, FolderPlus, Building2, AlertCircle, LogOut, MessageCircle, Star } from 'lucide-react';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -324,6 +324,14 @@ function AdminPortalContent() {
           <Link href="/admin/prices" className="flex items-center gap-2 px-6 py-2 rounded-full bg-[#d90082]/10 hover:bg-[#d90082]/20 transition-all text-xs font-bold uppercase tracking-widest text-[#d90082] border border-[#d90082]/20">
             <Tag size={14} />
             Editar precios
+          </Link>
+          <Link href="/admin/orders" className="flex items-center gap-2 px-6 py-2 rounded-full bg-green-500/10 hover:bg-green-500/20 transition-all text-xs font-bold uppercase tracking-widest text-green-400 border border-green-500/20">
+            <Package size={14} />
+            Orders
+          </Link>
+          <Link href="/admin/loyalty" className="flex items-center gap-2 px-6 py-2 rounded-full bg-amber-500/10 hover:bg-amber-500/20 transition-all text-xs font-bold uppercase tracking-widest text-amber-400 border border-amber-500/20">
+            <Star size={14} />
+            Loyalty
           </Link>
           <Link href="/admin/chats" className="flex items-center gap-2 px-6 py-2 rounded-full bg-blue-500/10 hover:bg-blue-500/20 transition-all text-xs font-bold uppercase tracking-widest text-blue-400 border border-blue-500/20">
             <MessageCircle size={14} />

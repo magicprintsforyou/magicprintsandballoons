@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { SquareClient, SquareEnvironment } from 'square';
 import { randomUUID } from 'crypto';
 import { CATEGORIZED_PRODUCTS } from '@/constants/products';
+import { quoteDeliveryFee, shippingFee, cartHasPrints } from '@/constants/fulfillment';
+import { generateOrderNumber } from '@/lib/orders';
 
 // Pricing rules — MUST match the client (src/context/ProductContext.tsx)
 const RUSH_SURCHARGE = 40;
@@ -25,13 +27,20 @@ function findProduct(productId: string) {
 }
 
 /** Recompute the order total from the catalog — never trust the client amount. */
-function computeServerTotal(items: IncomingItem[], promoCode?: string): number {
+async function computeServerTotal(
+  items: IncomingItem[],
+  promoCode?: string,
+  fulfillmentMethod?: string,
+  zip?: string
+): Promise<{ subtotal: number; discount: number; fulfillmentFee: number; total: number; feeNote?: string }> {
   let subtotal = 0;
+  const categories: string[] = [];
   for (const item of items) {
     const product = findProduct(item.productId);
     if (!product) {
       throw new Error(`Unknown product: ${item.productId}`);
     }
+    if (product.category) categories.push(String(product.category));
     const qty = Math.max(1, Math.min(99, Math.floor(Number(item.quantity) || 1)));
 
     let unitPrice = 0;
@@ -57,7 +66,34 @@ function computeServerTotal(items: IncomingItem[], promoCode?: string): number {
   if (promoCode && promoCode.trim().length > 2) {
     discount = subtotal * PROMO_DISCOUNT_RATE;
   }
-  return Math.max(0, Math.round((subtotal - discount) * 100) / 100);
+
+  // Fulfillment fee — computed server-side, never trusted from the client.
+  const method = fulfillmentMethod || 'pickup';
+  let fulfillmentFee = 0;
+  let feeNote: string | undefined;
+  if (method === 'delivery') {
+    const quote = await quoteDeliveryFee(zip || '');
+    if (!quote.estimated && quote.miles !== null) {
+      fulfillmentFee = quote.fee;
+    } else {
+      fulfillmentFee = 0;
+      feeNote = `Delivery fee could not be auto-calculated for ZIP "${zip || ''}" — confirm with customer before fulfilling.`;
+    }
+  } else if (method === 'shipping') {
+    fulfillmentFee = shippingFee(cartHasPrints(categories));
+    if (cartHasPrints(categories)) {
+      feeNote = 'Shipping base $25 for print products — large prints may need an adjusted shipping quote.';
+    }
+  }
+
+  const total = Math.max(0, Math.round((subtotal - discount + fulfillmentFee) * 100) / 100);
+  return {
+    subtotal: Math.round(subtotal * 100) / 100,
+    discount: Math.round(discount * 100) / 100,
+    fulfillmentFee,
+    total,
+    feeNote,
+  };
 }
 
 function isValidEmail(email: string) {
@@ -93,7 +129,11 @@ export async function POST(req: Request) {
     } = body as {
       sourceId?: string;
       items?: IncomingItem[];
-      customer?: { name?: string; email?: string; phone?: string; eventDate?: string; deliveryMethod?: string; shippingAddress?: string; notes?: string };
+      customer?: {
+        name?: string; email?: string; phone?: string; eventDate?: string;
+        deliveryMethod?: string; shippingAddress?: string; notes?: string;
+        address?: { street?: string; city?: string; state?: string; zip?: string };
+      };
       promoCode?: string;
       idempotencyKey?: string;
     };
@@ -118,13 +158,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please enter a valid phone number.' }, { status: 400 });
     }
 
-    // ---- Recompute total server-side ----
-    let total: number;
+    // ---- Validate fulfillment + address ----
+    const fulfillmentMethod = String(customer?.deliveryMethod || 'pickup');
+    const addr = customer?.address || {};
+    const needsAddress = fulfillmentMethod === 'delivery' || fulfillmentMethod === 'shipping';
+    if (needsAddress) {
+      const street = String(addr.street || '').trim();
+      const city = String(addr.city || '').trim();
+      const state = String(addr.state || '').trim();
+      const zip = String(addr.zip || '').trim();
+      if (street.length < 3 || city.length < 2 || state.length < 2 || zip.length < 3) {
+        return NextResponse.json({ error: 'Please enter a complete delivery/shipping address.' }, { status: 400 });
+      }
+    }
+
+    // ---- Recompute total server-side (items + discount + fulfillment fee) ----
+    let totals: { subtotal: number; discount: number; fulfillmentFee: number; total: number; feeNote?: string };
     try {
-      total = computeServerTotal(items, promoCode);
+      totals = await computeServerTotal(items, promoCode, fulfillmentMethod, String(addr.zip || '').trim());
     } catch (e: any) {
       return NextResponse.json({ error: e?.message || 'Invalid cart items.' }, { status: 400 });
     }
+    const total = totals.total;
     if (total <= 0) {
       return NextResponse.json({ error: 'Order total must be greater than zero.' }, { status: 400 });
     }
@@ -141,13 +196,19 @@ export async function POST(req: Request) {
         ? clientKey
         : randomUUID();
 
-    const referenceId = `mpb-${Date.now()}`;
+    const orderNumber = generateOrderNumber();
+    const referenceId = orderNumber;
+    const addressLine = needsAddress
+      ? `${String(addr.street).trim()}, ${String(addr.city).trim()}, ${String(addr.state).trim()} ${String(addr.zip).trim()}`
+      : 'Store Pickup / Arlington DFW';
     const noteParts = [
+      `Order: ${orderNumber}`,
       `Customer: ${name}`,
       `Phone: ${phone}`,
       customer?.eventDate ? `Event date: ${customer.eventDate}` : null,
-      customer?.deliveryMethod ? `Fulfillment: ${customer.deliveryMethod}` : null,
-      customer?.shippingAddress ? `Address: ${customer.shippingAddress}` : null,
+      `Fulfillment: ${fulfillmentMethod}`,
+      `Address: ${addressLine}`,
+      totals.feeNote ? `Fee note: ${totals.feeNote}` : null,
       customer?.notes ? `Notes: ${customer.notes}` : null,
     ].filter(Boolean);
 
@@ -170,6 +231,32 @@ export async function POST(req: Request) {
     }
 
     // ---- Notify the owner via the existing order email flow ----
+    const orderItemsHtml = items.map((i) => {
+      const p = findProduct(i.productId);
+      const unit = (() => {
+        if (i.variantSize && Array.isArray(p?.variants)) {
+          const v = p.variants.find((vv: any) => String(vv.size).toLowerCase() === String(i.variantSize).toLowerCase());
+          return Number(v?.price) || 0;
+        }
+        return Number(p?.price) || 0;
+      })();
+      const lineTotal = (unit + (i.isRushOrder ? RUSH_SURCHARGE : 0)) * Math.max(1, Math.min(99, Math.floor(Number(i.quantity) || 1)));
+      return `<tr style="font-size: 13px;">
+        <td style="padding: 10px; border: 1px solid #e5e7eb; font-weight: bold;">${p?.name || i.productId}</td>
+        <td style="padding: 10px; border: 1px solid #e5e7eb; font-size: 11px; color: #4b5563;">
+          Size: ${i.variantSize || 'Default'}<br>Material: ${i.material || 'N/A'}<br>Rush: ${i.isRushOrder ? 'Yes' : 'No'}
+        </td>
+        <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: center;">${i.quantity}</td>
+        <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: right; font-weight: bold;">$${lineTotal.toFixed(2)}</td>
+      </tr>`;
+    }).join('');
+
+    const totalsHtml = `
+      <p><strong>Subtotal:</strong> $${totals.subtotal.toFixed(2)}</p>
+      ${totals.discount > 0 ? `<p style="color: #10b981;"><strong>Discount:</strong> -$${totals.discount.toFixed(2)}</p>` : ''}
+      <p><strong>Fulfillment (${fulfillmentMethod}):</strong> $${totals.fulfillmentFee.toFixed(2)}</p>
+      <p style="font-size: 18px; font-weight: bold; color: #cc004e; margin-top: 10px;">Total charged: $${total.toFixed(2)}</p>`;
+
     try {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
       await fetch(`${siteUrl}/api/email`, {
@@ -180,10 +267,10 @@ export async function POST(req: Request) {
           email,
           phone,
           eventDate: customer?.eventDate || '',
-          deliveryMethod: customer?.deliveryMethod || 'pickup',
-          shippingAddress: customer?.shippingAddress || 'Store Pickup / Arlington DFW',
+          deliveryMethod: fulfillmentMethod,
+          shippingAddress: addressLine,
           promoCode: promoCode || 'None',
-          notes: (customer?.notes || '') + `\n\nSquare Payment ID: ${payment.id} | Amount charged: $${total.toFixed(2)}`,
+          notes: (customer?.notes || '') + `\n\nOrder: ${orderNumber} | Square Payment ID: ${payment.id} | Amount charged: $${total.toFixed(2)} (subtotal $${totals.subtotal.toFixed(2)}, discount $${totals.discount.toFixed(2)}, fulfillment $${totals.fulfillmentFee.toFixed(2)})`,
           cart: items.map((i) => {
             const p = findProduct(i.productId);
             return {
@@ -200,10 +287,64 @@ export async function POST(req: Request) {
       // best-effort only
     }
 
+    // ---- Send order receipt email to the CUSTOMER (best-effort) ----
+    try {
+      const resendKey = process.env.RESEND_API_KEY;
+      if (resendKey && resendKey !== 're_dummy_key') {
+        const { Resend } = await import('resend');
+        const resend = new Resend(resendKey);
+        await resend.emails.send({
+          from: 'magicprintsandballoons <noreply@magicprintsforyou.com>',
+          to: email,
+          subject: `Your order ${orderNumber} is confirmed`,
+          html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <div style="background: linear-gradient(135deg, #d90082, #41137e); padding: 32px; text-align: center; border-radius: 16px 16px 0 0;">
+              <h1 style="margin: 0; color: #fff; font-size: 22px; letter-spacing: 2px;">MAGIC PRINTS & BALLOONS</h1>
+              <p style="margin: 8px 0 0; color: rgba(255,255,255,.8); font-size: 13px;">Thank you for your order!</p>
+            </div>
+            <div style="padding: 32px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 16px 16px;">
+              <p style="font-size: 14px;">Hi ${name},</p>
+              <p style="font-size: 14px;">Your payment of <strong>$${total.toFixed(2)}</strong> was received. Here is your receipt:</p>
+              <div style="background: #fdf2f8; border: 2px dashed #d90082; border-radius: 12px; padding: 16px; text-align: center; margin: 20px 0;">
+                <p style="margin: 0; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Order number</p>
+                <p style="margin: 4px 0 0; font-size: 26px; font-weight: 900; color: #d90082; letter-spacing: 2px;">${orderNumber}</p>
+                <p style="margin: 8px 0 0; font-size: 12px; color: #888;">Save this number to track your order at magicprintsandballoons.vercel.app/track-order</p>
+              </div>
+              <table style="width: 100%; border-collapse: collapse; margin: 10px 0 20px;">
+                <thead><tr style="background: #f3f4f6; font-size: 12px; text-align: left;">
+                  <th style="padding: 10px; border: 1px solid #e5e7eb;">Item</th>
+                  <th style="padding: 10px; border: 1px solid #e5e7eb;">Details</th>
+                  <th style="padding: 10px; border: 1px solid #e5e7eb; text-align: center;">Qty</th>
+                  <th style="padding: 10px; border: 1px solid #e5e7eb; text-align: right;">Total</th>
+                </tr></thead>
+                <tbody>${orderItemsHtml}</tbody>
+              </table>
+              <div style="text-align: right; font-size: 14px; line-height: 1.7;">${totalsHtml}</div>
+              <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 13px;">
+                <p><strong>Fulfillment:</strong> ${fulfillmentMethod}</p>
+                <p><strong>Address:</strong> ${addressLine}</p>
+                ${customer?.eventDate ? `<p><strong>Event date:</strong> ${customer.eventDate}</p>` : ''}
+                ${payment.receiptUrl ? `<p><a href="${payment.receiptUrl}" style="color: #d90082;">View Square receipt</a></p>` : ''}
+              </div>
+              <p style="font-size: 12px; color: #888; margin-top: 24px;">Questions? Reply to this email or message us on WhatsApp with your order number.<br>Pickup: Arlington, TX · info@magicprintsforyou.com</p>
+            </div>
+          </div>`,
+        });
+      }
+    } catch (e) {
+      console.error('Receipt email failed (best-effort):', e);
+    }
+
     return NextResponse.json({
       ok: true,
       paymentId: payment.id,
       amountCharged: total,
+      orderNumber,
+      subtotal: totals.subtotal,
+      discount: totals.discount,
+      fulfillmentFee: totals.fulfillmentFee,
+      feeNote: totals.feeNote || null,
       receiptUrl: (payment as any)?.receiptUrl || null,
     });
   } catch (err: any) {
