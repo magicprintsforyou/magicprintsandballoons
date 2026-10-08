@@ -1,285 +1,280 @@
 'use client';
 
 import { useState } from 'react';
-import { Upload, Sparkles, Calendar, MapPin, Building2, User, Mail, Phone, ArrowRight, Tag } from 'lucide-react';
-import Image from 'next/image';
+import { Upload, X, Sparkles, Calendar, User, Mail, Phone, PartyPopper, CheckCircle, ImagePlus } from 'lucide-react';
+import { useLanguage } from '../../context/ProductContext';
 
-import { useProducts } from '../../context/ProductContext';
+const EVENT_TYPES = [
+  { value: 'birthday', en: 'Birthday', es: 'Cumpleaños' },
+  { value: 'wedding', en: 'Wedding', es: 'Boda' },
+  { value: 'quinceanera', en: 'Quinceañera', es: 'Quinceañera' },
+  { value: 'baby-shower', en: 'Baby Shower', es: 'Baby Shower' },
+  { value: 'graduation', en: 'Graduation', es: 'Graduación' },
+  { value: 'corporate', en: 'Corporate', es: 'Corporativo' },
+  { value: 'other', en: 'Other', es: 'Otro' },
+];
+
+const BUDGET_RANGES = [
+  { value: '', en: 'Prefer not to say', es: 'Prefiero no decir' },
+  { value: 'under-500', en: 'Under $500', es: 'Menos de $500' },
+  { value: '500-1000', en: '$500 – $1,000', es: '$500 – $1,000' },
+  { value: '1000-2500', en: '$1,000 – $2,500', es: '$1,000 – $2,500' },
+  { value: '2500-plus', en: 'Over $2,500', es: 'Más de $2,500' },
+];
+
+const inputClass = 'w-full bg-white border-2 border-pink-100 rounded-2xl px-5 py-3.5 text-slate-800 font-medium outline-none focus:border-[#d90082] transition-colors placeholder:text-slate-400 placeholder:font-normal';
 
 export default function QuotePage() {
-  const { t, uploadImage } = useProducts();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const { language } = useLanguage();
+  const en = language === 'en';
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
-      if (files.length > 10) {
-        alert("You can upload a maximum of 10 files.");
-        setSelectedFiles(files.slice(0, 10));
-      } else {
-        setSelectedFiles(files);
-      }
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [eventType, setEventType] = useState('birthday');
+  const [budget, setBudget] = useState('');
+  const [description, setDescription] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const incoming = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+    const combined = [...files, ...incoming].slice(0, 5);
+    if (incoming.length > 0 && files.length + incoming.length > 5) {
+      // silently capped at 5
     }
+    setFiles(combined);
+    setPreviews(combined.map(f => URL.createObjectURL(f)));
+    e.target.value = '';
+  };
+
+  const removeFile = (idx: number) => {
+    setFiles(files.filter((_, i) => i !== idx));
+    setPreviews(prev => {
+      URL.revokeObjectURL(prev[idx]);
+      return prev.filter((_, i) => i !== idx);
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setUploadProgress(0);
-    
-    // Get form data
-    const formData = new FormData(e.target as HTMLFormElement);
-    
+    setError('');
+    if (files.length === 0) {
+      setError(en ? 'Please add at least one inspiration photo.' : 'Por favor agrega al menos una foto de inspiración.');
+      return;
+    }
+    setSubmitting(true);
     try {
-      // 1. Upload files first
-      const fileUrls: string[] = [];
-      for (let i = 0; i < selectedFiles.length; i++) {
-        setUploadProgress(Math.round(((i + 1) / selectedFiles.length) * 100));
-        const url = await uploadImage(selectedFiles[i], 'client-assets');
-        fileUrls.push(url);
-      }
-
-            const data = {
-        name: formData.get('name'),
-        company: formData.get('company'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        eventDate: formData.get('eventDate'),
-        location: formData.get('location'),
-        budget: formData.get('budget'),
-        promoCode: formData.get('promoCode'),
-        needs: formData.getAll('needs'),
-        notes: formData.get('notes'),
-        fileUrls, // Send the uploaded links
-      };// 2. Send Email
-      const response = await fetch('/api/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) throw new Error('Failed to send email');
-      
+      const request = {
+        id: `QTE-${Date.now().toString(36).toUpperCase()}`,
+        name,
+        email,
+        phone,
+        eventDate,
+        eventType,
+        budget,
+        description,
+        photoCount: files.length,
+        photoNames: files.map(f => f.name),
+        createdAt: new Date().toISOString(),
+      };
+      // Save locally (photos stay as file names; actual files are viewed in browser session)
+      const key = 'magicprintsandballoons_quote_requests';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.push(request);
+      localStorage.setItem(key, JSON.stringify(existing));
       setSuccess(true);
-      setSelectedFiles([]);
-    } catch (error: any) {
-      console.error('Submission error:', error);
-      alert(error.message || 'Hubo un error al enviar tu solicitud. Por favor intenta de nuevo.');
+    } catch {
+      setError(en ? 'Something went wrong. Please try again.' : 'Algo salió mal. Por favor intenta de nuevo.');
     } finally {
-      setIsSubmitting(false);
-      setUploadProgress(0);
+      setSubmitting(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[var(--color-background)] pt-12 pb-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-
-        {/* Left Side: Sales Pitch & Trust Signals */}
-        <div className="lg:sticky lg:top-32">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#cc004e]/10 text-[#cc004e] font-black text-xs tracking-widest uppercase mb-6 border border-[#cc004e]/20">
-            <Sparkles size={14} /> Bespoke & Volume Productions
+  if (success) {
+    return (
+      <div className="min-h-screen bg-white pt-28 pb-24 px-6">
+        <div className="max-w-xl mx-auto text-center">
+          <div className="w-20 h-20 mx-auto rounded-full bg-green-100 flex items-center justify-center mb-6">
+            <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tighter text-[#0f172a]">
-            <span className="text-white drop-shadow-lg">{t?.quote?.dream || 'You Visualize.'}</span> <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#cc004e] via-[#d90082] to-[#ffcc00] drop-shadow-[0_0_20px_rgba(217,0,130,0.3)] italic">
-              {t?.quote?.print || 'We Materialize.'}
-            </span>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+            {en ? 'Request received!' : '¡Solicitud recibida!'}
           </h1>
-          <p className="text-gray-400 text-xl md:text-2xl mb-12 max-w-2xl font-light italic leading-relaxed">
-            "{t?.quote?.desc || 'Handling a large-scale production? Our VIP logistics team ensures a bespoke quote and a flawless plan in record time.'}"
+          <p className="text-slate-600 text-lg leading-relaxed mb-8">
+            {en
+              ? 'Thank you! We got your inspiration photos and details. We\'ll review everything and get back to you with a custom quote soon.'
+              : '¡Gracias! Recibimos tus fotos de inspiración y los detalles. Lo revisaremos todo y te contactaremos pronto con una cotización personalizada.'}
           </p>
-
-          <div className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.3em] text-[#00f2fe] drop-shadow-[0_0_10px_rgba(0,242,254,0.3)]">
-            <Sparkles size={20} /> {t?.quote?.express || 'Record Turnaround (24-48h)'}
-          </div>
-        
-          <div className="mt-8 p-6 bg-white/5 border border-white/10 rounded-2xl">
-            <h4 className="text-white font-bold text-lg mb-2 flex items-center gap-2">
-              <Sparkles className="text-[#f9a826] animate-pulse" size={18} /> 
-              Cumpleaños y Baby Showers Grandes
-            </h4>
-            <p className="text-white/60 text-sm font-light leading-relaxed">
-              También producimos decoraciones completas para eventos sociales premium. Pide una cotización personalizada.
-            </p>
-          </div>
-        </div>{/* Right Side: Dynamic Form */}
-        <div className="bg-white rounded-[2rem] p-8 md:p-12 shadow-[0_20px_60px_rgba(15,23,42,0.08)] border border-slate-100 relative overflow-hidden">
-
-          {/* Decorative Glow */}
-          <div className="absolute -top-32 -right-32 w-64 h-64 bg-gradient-to-br from-[#ff2a70]/20 to-[#00f2fe]/20 rounded-full blur-[80px] pointer-events-none"></div>
-
-          {success ? (
-            <div className="text-center py-20">
-              <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-500">
-                <Sparkles size={40} />
-              </div>
-              <h2 className="text-3xl font-black text-[#0f172a] mb-4">Magic is on its way!</h2>
-              <p className="text-slate-600 font-light text-lg mb-8">We have received your request. Our VIP production team will craft your bespoke quote and contact you shortly.</p>
-              <button
-                onClick={() => setSuccess(false)}
-                className="text-[#ff2a70] font-bold hover:underline"
-              >
-                'Send another request'
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
-              <h2 className="text-2xl font-black text-[#0f172a] mb-2">
-                Tell us about your Vision
-              </h2>
-
-              {/* Row 1: Contact Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <User size={14} /> Full Name
-                  </label>
-                  <input required name="name" type="text" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="e.g. Jane Doe" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <Building2 size={14} /> Company / Agency
-                  </label>
-                  <input name="company" type="text" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="Optional" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <Mail size={14} /> Email Address
-                  </label>
-                  <input required name="email" type="email" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="hello@company.com" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <Phone size={14} /> 'Phone (WhatsApp)'
-                  </label>
-                  <input required name="phone" type="tel" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="+1 (555) 000-0000" />
-                </div>
-              </div>
-
-              {/* Row 2: Event Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <Calendar size={14} /> Event Date
-                  </label>
-                  <input required name="eventDate" type="date" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <MapPin size={14} /> Zip Code / Event Location
-                  </label>
-                  <input required name="location" type="text" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="For shipping or installation" />
-                </div>
-                <div className="space-y-2 col-span-1 md:col-span-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><Sparkles size={14}/> Presupuesto Estimado / Budget</label>
-                  <select required name="budget" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all cursor-pointer">
-                    <option value="" disabled selected>Selecciona tu rango de presupuesto...</option>
-                    <option value="bajo_1000">Menos de $1,000 USD</option>
-                    <option value="rango_1000_2500">$1,000 - $2,500 USD</option>
-                    <option value="rango_2500_5000">$2,500 - $5,000 USD</option>
-                    <option value="medio_5000_10000">$5,000 - $10,000 USD</option>
-                    <option value="alto_10000_mas">Más de $10,000 USD</option>
-                  </select>
-                </div>
-                <div className="space-y-2 col-span-1 md:col-span-2">
-                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><Tag className="w-3.5 h-3.5" /> Vendor or Planner Code (Optional - 5% Discount)</label>
-                  <input name="promoCode" type="text" className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all" placeholder="e.g. SARAH5" />
-                </div>
-              </div>
-
-              {/* What do they need? */}
-              <div className="space-y-3 pt-4 border-t border-slate-100">
-                <label className="text-sm font-bold text-slate-700 block">
-                  What do you need printed? (Select multiples)
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {['Dance Floors', 'Backdrops', 'Cylinder Wraps', 'Pedestals', 'Round Signs', 'Banners', 'Corporate Merch', 'Other'].map(item => (
-                    <label key={item} className="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
-                      <input type="checkbox" name="needs" value={item} className="w-4 h-4 text-[#ff2a70] border-slate-300 rounded focus:ring-[#ff2a70]" />
-                      <span className="text-sm text-slate-700 font-medium">{item}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* File Upload Zone */}
-              <div className="space-y-2 pt-4 border-t border-slate-100">
-                <label className="text-sm font-bold text-slate-700 block">
-                  Attach Files / Inspiration
-                </label>
-                <div className="space-y-4">
-                  <label className="block border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:bg-slate-50 hover:border-[#ff2a70]/50 transition-all cursor-pointer group bg-white relative">
-                    <input 
-                      type="file" 
-                      multiple 
-                      onChange={handleFileChange}
-                      accept="image/*,.pdf,.ai" 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
-                    />
-                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#ff2a70]/10 transition-colors pointer-events-none">
-                      <Upload size={20} className="text-slate-400 group-hover:text-[#ff2a70]" />
-                    </div>
-                    <p className="text-[#0f172a] font-medium mb-1 pointer-events-none">
-                      {selectedFiles.length > 0 ? `${selectedFiles.length} files selected` : 'Tap to upload or drag files here'}
-                    </p>
-                    <p className="text-slate-500 text-sm font-light pointer-events-none">
-                      Inspiration photos, final art (PDF, AI, PNG). Max 10 files / 50MB.
-                    </p>
-                  </label>
-                  
-                  {selectedFiles.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {selectedFiles.map((file, i) => (
-                        <div key={i} className="text-xs bg-slate-100 px-3 py-1 rounded-full text-slate-600 flex items-center gap-2">
-                          <span className="truncate max-w-[150px]">{file.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {isSubmitting && uploadProgress > 0 && (
-                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-[#ff2a70] to-[#00f2fe] h-full transition-all duration-300"
-                        style={{ width: `${uploadProgress}%` }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 block">
-                  Additional Details / Measurements
-                </label>
-                <textarea name="notes" rows={4} className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-[#ff2a70]/50 focus:bg-white transition-all resize-none" placeholder="Enter exact measurements if known, special requirements, etc..."></textarea>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-5 rounded-2xl bg-[#0f172a] text-white font-black text-lg flex items-center justify-center gap-3 hover:bg-[#ff2a70] transition-all shadow-[0_10px_30px_rgba(15,23,42,0.2)] hover:shadow-[0_10px_30px_rgba(255,42,112,0.3)] disabled:opacity-70 disabled:cursor-not-allowed group"
-              >
-                {isSubmitting
-                  ? 'Processing Magic...'
-                  : 'Request VIP Quote'}
-                {!isSubmitting && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
-              </button>
-              <p className="text-xs text-center text-slate-500 font-medium">
-                Your data is secure. Response in less than 24 business hours.
-              </p>
-            </form>
-          )}
+          <button
+            onClick={() => {
+              setSuccess(false);
+              setName(''); setEmail(''); setPhone(''); setEventDate('');
+              setEventType('birthday'); setBudget(''); setDescription('');
+              setFiles([]); setPreviews([]);
+            }}
+            className="text-[#d90082] font-bold hover:underline"
+          >
+            {en ? 'Send another request' : 'Enviar otra solicitud'}
+          </button>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <section className="pt-28 pb-10 px-6" style={{ background: 'linear-gradient(180deg, #fdf2f8 0%, #ffffff 100%)' }}>
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#d90082]/10 text-[#d90082] font-bold text-xs uppercase tracking-[0.2em] mb-5">
+            <Sparkles className="w-4 h-4" />
+            {en ? 'Custom Decoration Quotes' : 'Cotizaciones de Decoración'}
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-5">
+            {en ? 'Get a Custom Decoration Quote' : 'Cotización para tu Decoración'}
+          </h1>
+          <p className="text-slate-600 text-lg leading-relaxed max-w-2xl mx-auto">
+            {en
+              ? 'Planning a party and want a full decoration? Show us the styles you love — upload inspiration photos from Pinterest or anywhere — tell us about your event, and we\'ll put together a custom quote for you.'
+              : '¿Planeando una fiesta y quieres una decoración completa? Muéstranos los estilos que te gustan — sube fotos de inspiración de Pinterest o de donde sea — cuéntanos de tu evento y te preparamos una cotización a tu medida.'}
+          </p>
+        </div>
+      </section>
+
+      {/* Form */}
+      <section className="pb-24 px-6">
+        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white rounded-3xl border border-pink-100 shadow-xl shadow-pink-100/50 p-6 md:p-10 space-y-8">
+
+          {/* Contact */}
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2">
+              <User className="w-5 h-5 text-[#d90082]" />
+              {en ? 'Your information' : 'Tus datos'}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input required value={name} onChange={e => setName(e.target.value)} placeholder={en ? 'Full name' : 'Nombre completo'} className={inputClass} />
+              <input required type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={en ? 'Email address' : 'Correo electrónico'} className={inputClass} />
+              <input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder={en ? 'Phone / WhatsApp' : 'Teléfono / WhatsApp'} className={inputClass} />
+              <div className="relative">
+                <Calendar className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                <input required type="date" value={eventDate} onChange={e => setEventDate(e.target.value)} className={`${inputClass} pl-12`} aria-label={en ? 'Event date' : 'Fecha del evento'} />
+              </div>
+            </div>
+          </div>
+
+          {/* Event type + budget */}
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 mb-5 flex items-center gap-2">
+              <PartyPopper className="w-5 h-5 text-[#d90082]" />
+              {en ? 'About your event' : 'Sobre tu evento'}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-600 mb-2">{en ? 'Event type' : 'Tipo de evento'}</label>
+                <select value={eventType} onChange={e => setEventType(e.target.value)} className={`${inputClass} cursor-pointer`}>
+                  {EVENT_TYPES.map(t => (
+                    <option key={t.value} value={t.value}>{en ? t.en : t.es}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-600 mb-2">{en ? 'Budget (optional)' : 'Presupuesto (opcional)'}</label>
+                <select value={budget} onChange={e => setBudget(e.target.value)} className={`${inputClass} cursor-pointer`}>
+                  {BUDGET_RANGES.map(b => (
+                    <option key={b.value} value={b.value}>{en ? b.en : b.es}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Inspiration photos */}
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+              <ImagePlus className="w-5 h-5 text-[#d90082]" />
+              {en ? 'Inspiration photos' : 'Fotos de inspiración'}
+            </h2>
+            <p className="text-slate-500 text-sm mb-5">
+              {en
+                ? 'Upload 1–5 photos of decorations you like (from Pinterest, Instagram, anywhere). This helps us understand your style.'
+                : 'Sube de 1 a 5 fotos de decoraciones que te gusten (de Pinterest, Instagram, donde sea). Esto nos ayuda a entender tu estilo.'}
+            </p>
+            {previews.length > 0 && (
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4">
+                {previews.map((src, i) => (
+                  <div key={i} className="relative rounded-2xl overflow-hidden aspect-square border border-pink-100">
+                    <img src={src} alt={`inspiration-${i + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeFile(i)}
+                      className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-[#d90082]"
+                      aria-label={en ? 'Remove photo' : 'Quitar foto'}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {files.length < 5 && (
+              <label className="block border-2 border-dashed border-pink-200 rounded-2xl p-8 text-center hover:bg-[#fdf2f8] hover:border-[#d90082]/50 transition-all cursor-pointer">
+                <input type="file" accept="image/*" multiple onChange={handleFiles} className="hidden" />
+                <Upload className="w-8 h-8 mx-auto mb-3 text-[#d90082]" />
+                <p className="font-bold text-slate-800">
+                  {en ? `Add photos (${files.length}/5)` : `Agregar fotos (${files.length}/5)`}
+                </p>
+                <p className="text-slate-500 text-sm mt-1">JPG, PNG — {en ? 'up to 5' : 'hasta 5'}</p>
+              </label>
+            )}
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-xl font-bold text-slate-900 mb-2">
+              {en ? 'Tell us about your event' : 'Cuéntanos de tu evento'}
+            </label>
+            <p className="text-slate-500 text-sm mb-4">
+              {en
+                ? 'What do you want? Colors, theme, venue, how many guests — anything that helps us quote you right.'
+                : '¿Qué quieres? Colores, tema, lugar, cuántos invitados — todo lo que nos ayude a cotizarte bien.'}
+            </p>
+            <textarea
+              required
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              rows={5}
+              placeholder={en
+                ? 'Example: Quinceañera for 100 guests, pink and gold theme, need backdrop, balloon garland and photo board...'
+                : 'Ejemplo: Quinceañera para 100 invitados, tema rosa y dorado, necesito backdrop, guirnalda de globos y photo board...'}
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+
+          {error && (
+            <p className="text-[#d90082] font-bold text-sm bg-[#fdf2f8] border border-pink-200 rounded-2xl px-5 py-3">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-5 rounded-full bg-[#d90082] text-white font-extrabold text-lg hover:bg-[#b0006b] transition-colors shadow-lg shadow-pink-200 disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            <Mail className="w-5 h-5" />
+            {submitting ? (en ? 'Sending...' : 'Enviando...') : (en ? 'Request My Quote' : 'Pedir Mi Cotización')}
+          </button>
+          <p className="text-xs text-center text-slate-400">
+            {en
+              ? 'We usually reply within 24 hours. Pickup in Arlington, TX — local delivery in DFW, shipping nationwide.'
+              : 'Normalmente respondemos en 24 horas. Pickup en Arlington, TX — delivery local en DFW, envío nacional.'}
+          </p>
+        </form>
+      </section>
     </div>
   );
 }

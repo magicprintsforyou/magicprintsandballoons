@@ -52,24 +52,6 @@ export default function Home() {
     },
   ];
 
-  const steps = [
-    {
-      num: '1',
-      title: language === 'en' ? 'Pick your product' : 'Elige tu producto',
-      desc: language === 'en' ? 'Choose a size and add it to your cart.' : 'Elige un tamaño y agrégalo al carrito.',
-    },
-    {
-      num: '2',
-      title: language === 'en' ? 'Send your photo or design' : 'Envía tu foto o diseño',
-      desc: language === 'en' ? 'Upload your photo after checkout — we handle the design.' : 'Sube tu foto después de pagar — nosotros hacemos el diseño.',
-    },
-    {
-      num: '3',
-      title: language === 'en' ? 'Pickup, delivery or shipping' : 'Pickup, delivery o envío',
-      desc: language === 'en' ? 'Ready in 2–5 business days. Pickup in Arlington, local delivery, or nationwide shipping.' : 'Listo en 2–5 días hábiles. Pickup en Arlington, delivery local o envío nacional.',
-    },
-  ];
-
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Hero — light, clean */}
@@ -126,6 +108,65 @@ export default function Home() {
           <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-[#d90082]" /> {language === 'en' ? 'Free pickup in Arlington' : 'Pickup gratis en Arlington'}</span>
           <span className="flex items-center gap-2"><Truck className="w-4 h-4 text-[#d90082]" /> {language === 'en' ? 'Local delivery (DFW)' : 'Delivery local (DFW)'}</span>
           <span className="flex items-center gap-2"><Package className="w-4 h-4 text-[#d90082]" /> {language === 'en' ? 'Nationwide shipping' : 'Envío a todo el país'}</span>
+        </div>
+      </section>
+
+      {/* Who We Are / How We Work */}
+      <section className="py-16 md:py-20 px-6" style={{ background: '#fdf2f8' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-[#d90082] font-bold text-xs uppercase tracking-[0.25em] mb-4">
+              {language === 'en' ? 'Who We Are' : 'Quiénes Somos'}
+            </p>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-5">
+              {language === 'en' ? 'Your local print & balloon shop' : 'Tu tienda local de impresiones y globos'}
+            </h2>
+            <p className="text-slate-600 text-lg leading-relaxed max-w-3xl mx-auto">
+              {language === 'en'
+                ? 'We are a local business in Arlington, Texas. We create custom prints — photo boards, life-size cutouts, backdrops, floor wraps and seating charts — and we carry premium balloons: SemperTex and TufTex latex, foil balloons for every occasion, DIY garland kits and helium. We serve the whole DFW area and ship our products nationwide.'
+                : 'Somos un negocio local en Arlington, Texas. Hacemos impresiones personalizadas — photo boards, cutouts de tamaño real, backdrops, floor wraps y seating charts — y tenemos globos premium: látex SemperTex y TufTex, globos de foil para toda ocasión, kits de guirnaldas y helio. Atendemos todo el área de DFW y enviamos nuestros productos a todo el país.'}
+            </p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              {
+                num: '1',
+                title: language === 'en' ? 'Choose or ask' : 'Elige o pregunta',
+                desc: language === 'en'
+                  ? 'Shop a product from our catalog, or request a custom decoration quote with your inspiration photos.'
+                  : 'Compra un producto de nuestro catálogo, o pide una cotización de decoración con tus fotos de inspiración.',
+              },
+              {
+                num: '2',
+                title: language === 'en' ? 'Send your photos' : 'Envía tus fotos',
+                desc: language === 'en'
+                  ? 'Upload your pictures or design for prints — or just pick your balloon colors.'
+                  : 'Sube tus fotos o diseño para las impresiones — o solo elige tus colores de globos.',
+              },
+              {
+                num: '3',
+                title: language === 'en' ? 'We make it' : 'Lo hacemos',
+                desc: language === 'en'
+                  ? 'We print, cut and prepare everything with care, usually in 2–5 business days.'
+                  : 'Imprimimos, cortamos y preparamos todo con cuidado, normalmente en 2–5 días hábiles.',
+              },
+              {
+                num: '4',
+                title: language === 'en' ? 'Get it your way' : 'Recíbelo como quieras',
+                desc: language === 'en'
+                  ? 'Free pickup in Arlington, local delivery across DFW, or shipping nationwide.'
+                  : 'Pickup gratis en Arlington, delivery local en DFW, o envío a todo el país.',
+              },
+            ].map((step) => (
+              <div key={step.num} className="bg-white rounded-2xl border border-pink-100 p-6 shadow-sm text-center">
+                <div className="w-12 h-12 mx-auto rounded-full bg-[#d90082] text-white font-extrabold text-xl flex items-center justify-center mb-4">
+                  {step.num}
+                </div>
+                <h3 className="font-bold text-slate-900 mb-2">{step.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -197,31 +238,6 @@ export default function Home() {
             <Link href="/products" className="inline-block px-8 py-3 bg-[#d90082] text-white rounded-full font-bold hover:bg-[#b0006b] transition-colors">
               {language === 'en' ? 'View All Products' : 'Ver Todos'}
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works — 3 simple steps */}
-      <section className="py-16 md:py-20 bg-white px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
-              {language === 'en' ? 'How It Works' : 'Cómo Funciona'}
-            </h2>
-            <p className="text-slate-500">
-              {language === 'en' ? 'Easy as 1-2-3' : 'Fácil como 1-2-3'}
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {steps.map((step) => (
-              <div key={step.num} className="bg-white rounded-2xl border border-pink-100 p-6 shadow-sm text-center">
-                <div className="w-12 h-12 mx-auto rounded-full bg-[#d90082] text-white font-extrabold text-xl flex items-center justify-center mb-4">
-                  {step.num}
-                </div>
-                <h3 className="font-bold text-slate-900 mb-2">{step.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
