@@ -161,19 +161,6 @@ export const CATEGORIZED_PRODUCTS = {
     image: "/images/covers/themed-props.jpg",
     items: [
       {
-        id: "luxury-welcome-sign",
-        name: "Luxury Event Welcome Sign",
-        category: "Signage",
-        image: "/images/welcome-sign-easel.jpg",
-        description: "Bespoke acrylic or foam board welcome board with UV print and custom vinyl lettering.",
-        themes: ["wedding", "corporate", "quinceanera", "birthday"],
-        variants: [
-          { size: "24 in. x 36 in.", price: 120.00 },
-          { size: "30 in. x 40 in.", price: 160.00 },
-          { size: "36 in. x 48 in.", price: 210.00 },
-        ]
-      },
-      {
         id: "themed-props",
         name: "Custom Life-Size Cutout",
         category: "Props",
@@ -196,19 +183,6 @@ export const CATEGORIZED_PRODUCTS = {
     description: "Turn your event floor into a canvas with high-density non-slip vinyl.",
     image: "/images/floor-wrap-wedding.jpg",
     items: [
-      {
-        id: "luxury-welcome-sign",
-        name: "Luxury Event Welcome Sign",
-        category: "Signage",
-        image: "/images/welcome-sign-easel.jpg",
-        description: "Bespoke acrylic or foam board welcome board with UV print and custom vinyl lettering.",
-        themes: ["wedding", "corporate", "quinceanera", "birthday"],
-        variants: [
-          { size: "24 in. x 36 in.", price: 120.00 },
-          { size: "30 in. x 40 in.", price: 160.00 },
-          { size: "36 in. x 48 in.", price: 210.00 },
-        ]
-      },
       {
         id: "custom-floor-wrap",
         name: "Custom Vinyl Floor Wrap",
@@ -237,19 +211,6 @@ export const CATEGORIZED_PRODUCTS = {
     description: "Curated kits with everything you need for a professional themed setup.",
     image: "/images/covers/grand-production-kit.jpg",
     items: [
-      {
-        id: "luxury-welcome-sign",
-        name: "Luxury Event Welcome Sign",
-        category: "Signage",
-        image: "/images/welcome-sign-easel.jpg",
-        description: "Bespoke acrylic or foam board welcome board with UV print and custom vinyl lettering.",
-        themes: ["wedding", "corporate", "quinceanera", "birthday"],
-        variants: [
-          { size: "24 in. x 36 in.", price: 120.00 },
-          { size: "30 in. x 40 in.", price: 160.00 },
-          { size: "36 in. x 48 in.", price: 210.00 },
-        ]
-      },
       {
         id: "essential-kit",
         name: "Essential Event Kit",
