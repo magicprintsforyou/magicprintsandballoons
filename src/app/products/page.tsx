@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Box, Layers, Layout, Sparkles, Zap, Package, 
@@ -9,9 +10,13 @@ import { useProducts } from '../../context/ProductContext';
 import ProductCard from '../../components/ProductCard';
 import ProductModal from '../../components/ProductModal';
 
-const ProductsPage = () => {
+const ProductsPageInner = () => {
   const { catalog, addToCart } = useProducts();
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const initialCat = searchParams.get('cat');
+  const [activeCategory, setActiveCategory] = useState<string | null>(
+    initialCat && catalog[initialCat] ? initialCat : null
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
@@ -290,5 +295,11 @@ const ProductsPage = () => {
     </div>
   );
 };
+
+const ProductsPage = () => (
+  <Suspense fallback={<div className="min-h-screen pt-24 pb-20 bg-slate-50" />}>
+    <ProductsPageInner />
+  </Suspense>
+);
 
 export default ProductsPage;
