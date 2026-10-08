@@ -24,7 +24,7 @@ export default function Home() {
   const categories = [
     {
       title: language === 'en' ? 'Balloons' : 'Globos',
-      desc: language === 'en' ? 'SemperTex & TufTex latex, helium & foil' : 'Látex SemperTex y TufTex, helio y foil',
+      desc: language === 'en' ? 'Latex by brand, foil by theme, kits & helium' : 'Látex por marca, foil por tema, kits y helio',
       image: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800',
       href: '/products',
       icon: <PartyPopper className="w-5 h-5" />,

@@ -472,16 +472,16 @@ export const CATEGORIZED_PRODUCTS = {
     ]
   },
   latexBalloons: {
-    title: "Premium Latex Balloons",
-    description: "Professional-grade latex balloons from SemperTex and TufTex — the brands decorators trust. Ships nationwide, uninflated.",
+    title: "Latex Balloons by Brand",
+    description: "Professional latex balloons organized by brand — SemperTex and TufTex, the names balloon decorators trust. Pick your brand, size and finish. Ships nationwide, uninflated.",
     image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
     items: [
       {
         id: "sempertex-11in",
         name: "SemperTex 11\" Latex Balloons",
-        category: "Latex",
+        category: "SemperTex",
         image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
-        description: "The industry standard. SemperTex natural latex balloons with rich, consistent color — perfect for garlands, arches, bouquets and centerpieces. Ships uninflated.",
+        description: "The industry standard. SemperTex 11\" balloons with rich, consistent color — the workhorse for garlands, arches, bouquets and centerpieces. Available in Deluxe, Fashion, Pastel Matte, Pearl, Metallic, Reflex and Neon finishes. Ships uninflated.",
         themes: ["birthday", "wedding", "quinceanera", "graduation", "baby shower", "corporate"],
         materials: ["Natural Latex", "SemperTex"],
         fulfillment: "ships",
@@ -494,9 +494,9 @@ export const CATEGORIZED_PRODUCTS = {
       {
         id: "sempertex-5in",
         name: "SemperTex 5\" Latex Balloons",
-        category: "Latex",
+        category: "SemperTex",
         image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
-        description: "Small but mighty. 5\" SemperTex balloons for filling garlands, balloon walls and detailed decor work. Ships uninflated.",
+        description: "Small but mighty. 5\" SemperTex balloons for filling out garlands, balloon walls and detailed decor work. Ships uninflated.",
         themes: ["birthday", "wedding", "quinceanera", "baby shower"],
         materials: ["Natural Latex", "SemperTex"],
         fulfillment: "ships",
@@ -508,7 +508,7 @@ export const CATEGORIZED_PRODUCTS = {
       {
         id: "sempertex-18in",
         name: "SemperTex 18\" Latex Balloons",
-        category: "Latex",
+        category: "SemperTex",
         image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
         description: "Big statement balloons. 18\" SemperTex rounds for dramatic focal pieces, photo moments and venue entrances. Ships uninflated.",
         themes: ["birthday", "wedding", "quinceanera", "graduation", "corporate"],
@@ -522,7 +522,7 @@ export const CATEGORIZED_PRODUCTS = {
       {
         id: "sempertex-24in",
         name: "SemperTex 24\" Latex Balloons",
-        category: "Latex",
+        category: "SemperTex",
         image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
         description: "Giant 24\" SemperTex balloons — the showstopper for grand entrances, stage decor and unforgettable photos. Ships uninflated.",
         themes: ["wedding", "quinceanera", "graduation", "corporate", "birthday"],
@@ -536,7 +536,7 @@ export const CATEGORIZED_PRODUCTS = {
       {
         id: "sempertex-36in",
         name: "SemperTex 36\" Jumbo Latex Balloons",
-        category: "Latex",
+        category: "SemperTex",
         image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
         description: "The biggest of them all. 36\" jumbo SemperTex balloons for jaw-dropping installs. Ships uninflated.",
         themes: ["wedding", "quinceanera", "corporate", "birthday"],
@@ -550,9 +550,9 @@ export const CATEGORIZED_PRODUCTS = {
       {
         id: "tuftex-11in",
         name: "TufTex 11\" Latex Balloons",
-        category: "Latex",
+        category: "TufTex",
         image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
-        description: "Made in the USA. TufTex balloons are a decorator favorite for their durability and gorgeous matte and pearl finishes. Ships uninflated.",
+        description: "Made in the USA. TufTex 11\" balloons are a decorator favorite for their durability and gorgeous matte and pearl finishes — including the popular retro and muted tones. Ships uninflated.",
         themes: ["birthday", "wedding", "quinceanera", "graduation", "baby shower", "corporate"],
         materials: ["Natural Latex", "TufTex"],
         fulfillment: "ships",
@@ -561,22 +561,221 @@ export const CATEGORIZED_PRODUCTS = {
           { size: "11\" — Pack of 50", price: 10.99 },
           { size: "11\" — Pack of 100", price: 18.99 }
         ]
+      },
+      {
+        id: "tuftex-17in",
+        name: "TufTex 17\" Latex Balloons",
+        category: "TufTex",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "The in-between showpiece. 17\" TufTex rounds in matte, pearl and crystal finishes — perfect for adding dimension to garlands and bouquets. Ships uninflated.",
+        themes: ["birthday", "wedding", "quinceanera", "baby shower", "graduation"],
+        materials: ["Natural Latex", "TufTex"],
+        fulfillment: "ships",
+        price: 16.99,
+        variants: [
+          { size: "17\" — Pack of 50", price: 16.99 }
+        ]
+      },
+      {
+        id: "tuftex-24in",
+        name: "TufTex 24\" Latex Balloons",
+        category: "TufTex",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "Giant 24\" TufTex balloons with that signature strong latex and beautiful matte finish. A bold anchor for entrances and photo walls. Ships uninflated.",
+        themes: ["wedding", "quinceanera", "corporate", "birthday", "graduation"],
+        materials: ["Natural Latex", "TufTex"],
+        fulfillment: "ships",
+        price: 29.99,
+        variants: [
+          { size: "24\" — Pack of 25", price: 29.99 }
+        ]
+      }
+    ]
+  },
+  foilBalloons: {
+    title: "Foil Balloons by Theme",
+    description: "Shiny, long-lasting foil balloons organized the way party pros shop — by theme. Numbers, letters, shapes and occasion prints. Sold uninflated and shipped nationwide, or pick up inflated with helium in Arlington.",
+    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+    items: [
+      {
+        id: "foil-numbers",
+        name: "Jumbo Number Foil Balloons (0–9)",
+        category: "Numbers",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "The milestone must-have. Giant 34\" foil numbers in gold, silver, rose gold and more — pick any digit 0–9. Self-sealing valve. Ships uninflated; helium inflation available at pickup in Arlington.",
+        themes: ["birthday", "graduation", "anniversary", "quinceanera"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 6.99,
+        variants: [
+          { size: "34\" Single Number (0–9)", price: 6.99 },
+          { size: "34\" Number Pair", price: 12.99 }
+        ]
+      },
+      {
+        id: "foil-letters",
+        name: "Letter Foil Balloons (A–Z)",
+        category: "Letters",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "Spell names, words and messages. 16\" gold and silver script letters — air-fillable, no helium needed, with tabs for easy hanging. Ships uninflated.",
+        themes: ["birthday", "wedding", "baby shower", "graduation", "bridal shower"],
+        materials: ["Foil", "Hanging Tabs"],
+        fulfillment: "ships",
+        price: 4.99,
+        variants: [
+          { size: "16\" Single Letter (A–Z)", price: 4.99 },
+          { size: "16\" 4-Letter Word Set", price: 17.99 }
+        ]
+      },
+      {
+        id: "foil-stars",
+        name: "Star Foil Balloons",
+        category: "Shapes",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "Classic 19\" foil stars in every party color — the easiest way to add shine to bouquets, columns and backdrops. Self-sealing. Ships uninflated.",
+        themes: ["birthday", "graduation", "corporate", "quinceanera"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 12.99,
+        variants: [
+          { size: "19\" Single Star", price: 2.99 },
+          { size: "19\" Star — Pack of 5", price: 12.99 }
+        ]
+      },
+      {
+        id: "foil-hearts",
+        name: "Heart Foil Balloons",
+        category: "Shapes",
+        image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800",
+        description: "Sweet 18\" foil hearts for weddings, anniversaries, Valentine's Day and bridal showers. Self-sealing. Ships uninflated.",
+        themes: ["wedding", "anniversary", "bridal shower", "valentine"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 12.99,
+        variants: [
+          { size: "18\" Single Heart", price: 2.99 },
+          { size: "18\" Heart — Pack of 5", price: 12.99 }
+        ]
+      },
+      {
+        id: "foil-rounds",
+        name: "Round Foil Balloons",
+        category: "Shapes",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "Versatile 18\" round foils — solid colors, satin finishes and fun prints. Float for days with helium or hang air-filled. Ships uninflated.",
+        themes: ["birthday", "wedding", "corporate", "graduation", "baby shower"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 12.99,
+        variants: [
+          { size: "18\" Single Round", price: 2.99 },
+          { size: "18\" Round — Pack of 5", price: 12.99 }
+        ]
+      },
+      {
+        id: "foil-birthday",
+        name: "Happy Birthday Foil Balloons",
+        category: "Birthday",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "Birthday-themed foil prints — \"Happy Birthday\" scripts, confetti designs and age-specific styles for kids, teens and milestone years. Ships uninflated.",
+        themes: ["birthday"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 3.99,
+        variants: [
+          { size: "18\" Birthday Foil — Single", price: 3.99 },
+          { size: "18\" Birthday Foil — Pack of 3", price: 10.99 }
+        ]
+      },
+      {
+        id: "foil-baby",
+        name: "Baby Shower & Gender Reveal Foil Balloons",
+        category: "Baby Shower",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "\"It's a Boy\", \"It's a Girl\", baby bottles, rattles and oh-baby scripts in soft pinks, blues and neutrals. Ships uninflated.",
+        themes: ["baby shower", "gender reveal"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 3.99,
+        variants: [
+          { size: "18\" Baby Foil — Single", price: 3.99 },
+          { size: "18\" Baby Foil — Pack of 3", price: 10.99 }
+        ]
+      },
+      {
+        id: "foil-wedding",
+        name: "Wedding & Anniversary Foil Balloons",
+        category: "Wedding",
+        image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800",
+        description: "\"Mr & Mrs\", \"Just Married\", \"I Do\" and anniversary scripts in elegant gold, silver and white. Ships uninflated.",
+        themes: ["wedding", "anniversary", "bridal shower"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 3.99,
+        variants: [
+          { size: "18\" Wedding Foil — Single", price: 3.99 },
+          { size: "18\" Wedding Foil — Pack of 3", price: 10.99 }
+        ]
+      },
+      {
+        id: "foil-holiday",
+        name: "Holiday Foil Balloons",
+        category: "Holiday",
+        image: "https://images.unsplash.com/photo-1512389142860-9c449e58a543?q=80&w=800",
+        description: "Seasonal foil prints — Christmas, Halloween, Thanksgiving, New Year's and more. Festive shapes and messages that change with the calendar. Ships uninflated.",
+        themes: ["christmas", "halloween", "holiday"],
+        materials: ["Foil", "Self-Sealing Valve"],
+        fulfillment: "ships",
+        price: 3.99,
+        variants: [
+          { size: "18\" Holiday Foil — Single", price: 3.99 },
+          { size: "18\" Holiday Foil — Pack of 3", price: 10.99 }
+        ]
       }
     ]
   },
   heliumBalloons: {
     title: "Helium Balloons — Pickup Only",
-    description: "Fresh helium balloons, inflated in-store and ready for your event. Available for pickup in Arlington, TX only — helium can't ship!",
+    description: "Fresh helium balloons, inflated in-store and ready for your event. Singles and bunches — order ahead and pick up in Arlington, TX. Helium can't ship!",
     image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
     items: [
       {
-        id: "helium-latex-bouquet",
-        name: "Helium Latex Bouquet",
-        category: "Helium",
+        id: "helium-single-latex",
+        name: "Single Helium Latex Balloon",
+        category: "Individual",
         image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
-        description: "A hand-tied bouquet of helium-filled latex balloons in your choice of colors. Ready for pickup in Arlington. Order ahead so they're fresh for your event!",
+        description: "One 11\" latex balloon (SemperTex or TufTex) filled with helium, tied with ribbon and weighted. Pick your color. Pickup in Arlington only.",
         themes: ["birthday", "graduation", "baby shower", "anniversary"],
         materials: ["Latex", "Helium", "Ribbon"],
+        fulfillment: "pickup",
+        price: 3.49,
+        variants: [
+          { size: "Single 11\" Helium Latex", price: 3.49 }
+        ]
+      },
+      {
+        id: "helium-single-foil",
+        name: "Single Helium Foil Balloon",
+        category: "Individual",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "One foil balloon — star, heart, round or themed print — filled with helium and ready to float for days. Pickup in Arlington only.",
+        themes: ["birthday", "wedding", "graduation", "baby shower"],
+        materials: ["Foil", "Helium", "Ribbon"],
+        fulfillment: "pickup",
+        price: 6.99,
+        variants: [
+          { size: "Single 18–19\" Helium Foil", price: 6.99 },
+          { size: "Single 34\" Helium Number", price: 14.99 }
+        ]
+      },
+      {
+        id: "helium-latex-bouquet",
+        name: "Helium Latex Bouquet",
+        category: "Bunches",
+        image: "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?q=80&w=800",
+        description: "A hand-tied bunch of helium-filled latex balloons in your choice of colors, with ribbon and weight included. Ready for pickup in Arlington — order ahead so they're fresh for your event!",
+        themes: ["birthday", "graduation", "baby shower", "anniversary"],
+        materials: ["Latex", "Helium", "Ribbon", "Weight"],
         fulfillment: "pickup",
         price: 24.99,
         variants: [
@@ -585,26 +784,26 @@ export const CATEGORIZED_PRODUCTS = {
         ]
       },
       {
-        id: "helium-number-balloons",
-        name: "Helium Number Balloons",
-        category: "Helium",
-        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
-        description: "Giant foil number balloons filled with helium — the must-have for milestone birthdays and graduations. Pickup in Arlington only.",
-        themes: ["birthday", "graduation", "anniversary"],
-        materials: ["Foil", "Helium"],
+        id: "helium-deluxe-bouquet",
+        name: "Deluxe Mixed Helium Bouquet",
+        category: "Bunches",
+        image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
+        description: "The best of both — helium latex balloons paired with shiny foil stars or hearts, hand-tied with ribbon and weight. A ready-made centerpiece. Pickup in Arlington only.",
+        themes: ["birthday", "wedding", "quinceanera", "graduation", "baby shower"],
+        materials: ["Latex", "Foil", "Helium", "Ribbon", "Weight"],
         fulfillment: "pickup",
-        price: 14.99,
+        price: 39.99,
         variants: [
-          { size: "34\" Single Number", price: 14.99 },
-          { size: "34\" Double Numbers", price: 27.99 }
+          { size: "6 Latex + 2 Foil Bouquet", price: 39.99 },
+          { size: "12 Latex + 4 Foil Bouquet", price: 69.99 }
         ]
       },
       {
         id: "helium-custom-message",
         name: "Custom Message Helium Balloon",
-        category: "Helium",
+        category: "Individual",
         image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
-        description: "A jumbo latex balloon with your custom message, filled with helium and ready to float. Pickup in Arlington only.",
+        description: "A jumbo 24\" latex balloon with your custom message in vinyl lettering, filled with helium and ready to float. Pickup in Arlington only.",
         themes: ["birthday", "wedding", "baby shower", "graduation"],
         materials: ["Latex", "Helium", "Custom Vinyl Lettering"],
         fulfillment: "pickup",
@@ -617,7 +816,7 @@ export const CATEGORIZED_PRODUCTS = {
   },
   balloonKits: {
     title: "DIY Balloon Garland Kits",
-    description: "Everything you need to build a stunning balloon garland at home — balloons, strip, glue dots and instructions. Ships nationwide, uninflated.",
+    description: "Everything you need to build a stunning balloon garland at home — premium latex balloons in curated color palettes, garland strip, glue dots, pump and step-by-step instructions. Ships nationwide, uninflated.",
     image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800",
     items: [
       {
@@ -663,6 +862,51 @@ export const CATEGORIZED_PRODUCTS = {
         variants: [
           { size: "6 ft Garland Kit", price: 44.99 },
           { size: "12 ft Garland Kit", price: 79.99 }
+        ]
+      },
+      {
+        id: "garland-kit-pastel-dream",
+        name: "Pastel Dream Garland Kit",
+        category: "DIY Kit",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "Soft pastels in every shade — matte pink, lavender, baby blue and cream. A dreamy palette for birthdays, showers and spring parties. Balloons, strip, glue dots, pump and instructions included. Ships uninflated.",
+        themes: ["birthday", "baby shower", "bridal shower", "easter"],
+        materials: ["Latex Balloons", "Garland Strip", "Glue Dots", "Hand Pump", "Instructions"],
+        fulfillment: "ships",
+        price: 49.99,
+        variants: [
+          { size: "6 ft Garland Kit", price: 49.99 },
+          { size: "12 ft Garland Kit", price: 89.99 }
+        ]
+      },
+      {
+        id: "garland-kit-black-gold",
+        name: "Black & Gold Glam Garland Kit",
+        category: "DIY Kit",
+        image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=800",
+        description: "Dramatic and luxe. Black, gold chrome and champagne balloons for milestone birthdays, New Year's Eve and glam corporate events. Everything included. Ships uninflated.",
+        themes: ["birthday", "corporate", "new year", "graduation"],
+        materials: ["Latex Balloons", "Garland Strip", "Glue Dots", "Hand Pump", "Instructions"],
+        fulfillment: "ships",
+        price: 54.99,
+        variants: [
+          { size: "6 ft Garland Kit", price: 54.99 },
+          { size: "12 ft Garland Kit", price: 94.99 }
+        ]
+      },
+      {
+        id: "garland-kit-oh-baby",
+        name: "Oh Baby Garland Kit",
+        category: "DIY Kit",
+        image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800",
+        description: "Gender-reveal ready neutrals — white sand, cream and beige with pops of pink and blue to mix your way. Balloons, strip, glue dots, pump and instructions. Ships uninflated.",
+        themes: ["baby shower", "gender reveal", "birthday"],
+        materials: ["Latex Balloons", "Garland Strip", "Glue Dots", "Hand Pump", "Instructions"],
+        fulfillment: "ships",
+        price: 49.99,
+        variants: [
+          { size: "6 ft Garland Kit", price: 49.99 },
+          { size: "12 ft Garland Kit", price: 89.99 }
         ]
       }
     ]
