@@ -40,6 +40,9 @@ export default function QuotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [waUrl, setWaUrl] = useState('');
+  const [waText, setWaText] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -59,6 +62,15 @@ export default function QuotePage() {
       URL.revokeObjectURL(prev[idx]);
       return prev.filter((_, i) => i !== idx);
     });
+  };
+
+  const copyDetails = async () => {
+    try {
+      await navigator.clipboard.writeText(waText);
+      setCopied(true);
+    } catch {
+      setCopied(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,11 +95,36 @@ export default function QuotePage() {
         photoNames: files.map(f => f.name),
         createdAt: new Date().toISOString(),
       };
-      // Save locally (photos stay as file names; actual files are viewed in browser session)
+      // Save a local copy in this browser
       const key = 'magicprintsandballoons_quote_requests';
       const existing = JSON.parse(localStorage.getItem(key) || '[]');
       existing.push(request);
       localStorage.setItem(key, JSON.stringify(existing));
+
+      // Deliver the quote to the business instantly via WhatsApp. localStorage
+      // alone never reaches us, so the request is opened as a WhatsApp chat
+      // with every detail prefilled — the customer just presses send, then
+      // sends the inspiration photos in the same chat.
+      const eventLabel = EVENT_TYPES.find(t => t.value === eventType)?.en ?? eventType;
+      const budgetLabel = BUDGET_RANGES.find(b => b.value === budget)?.en ?? '';
+      const waLines = [
+        `New quote request ${request.id} - magicprintsandballoons.vercel.app`,
+        ``,
+        `Name: ${name}`,
+        `Phone: ${phone}`,
+        `Email: ${email}`,
+        `Event: ${eventLabel} on ${eventDate}`,
+        budgetLabel ? `Budget: ${budgetLabel}` : null,
+        ``,
+        `Details: ${description}`,
+        ``,
+        `Inspiration photos: ${files.length} (sending them in this chat next)`,
+      ].filter(Boolean).join('\n');
+      const url = `https://wa.me/18179415183?text=${encodeURIComponent(waLines)}`;
+      setWaText(waLines);
+      setWaUrl(url);
+      setCopied(false);
+      window.open(url, '_blank', 'noopener');
       setSuccess(true);
     } catch {
       setError(en ? 'Something went wrong. Please try again.' : 'Algo salió mal. Por favor intenta de nuevo.');
@@ -106,10 +143,34 @@ export default function QuotePage() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
             {en ? 'Request received!' : '¡Solicitud recibida!'}
           </h1>
-          <p className="text-slate-600 text-lg leading-relaxed mb-8">
+          <p className="text-slate-600 text-lg leading-relaxed mb-6">
             {en
-              ? 'Thank you! We got your inspiration photos and details. We\'ll review everything and get back to you with a custom quote soon.'
-              : '¡Gracias! Recibimos tus fotos de inspiración y los detalles. Lo revisaremos todo y te contactaremos pronto con una cotización personalizada.'}
+              ? 'Almost done! We opened WhatsApp with your request details ready — just press send there, then send your inspiration photos in the same chat and we\'ll get back to you with a custom quote.'
+              : '¡Ya casi! Abrimos WhatsApp con los detalles de tu solicitud listos — solo presiona enviar ahí y luego manda tus fotos de inspiración en el mismo chat y te contactaremos con una cotización personalizada.'}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+            {waUrl && (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#d90082] text-white font-extrabold hover:bg-[#b0006b] transition-colors shadow-lg shadow-pink-200"
+              >
+                {en ? 'Open WhatsApp' : 'Abrir WhatsApp'}
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={copyDetails}
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-pink-200 text-[#d90082] font-extrabold hover:bg-[#fdf2f8] transition-colors"
+            >
+              {copied ? (en ? 'Copied!' : '¡Copiado!') : (en ? 'Copy request details' : 'Copiar detalles')}
+            </button>
+          </div>
+          <p className="text-sm text-slate-400 mb-8">
+            {en
+              ? 'Didn\'t see WhatsApp open? Use the button above, or copy the details and send them to us at (817) 941-5183.'
+              : '¿No se abrió WhatsApp? Usa el botón de arriba, o copia los detalles y envíalos al (817) 941-5183.'}
           </p>
           <button
             onClick={() => {
@@ -117,6 +178,7 @@ export default function QuotePage() {
               setName(''); setEmail(''); setPhone(''); setEventDate('');
               setEventType('birthday'); setBudget(''); setDescription('');
               setFiles([]); setPreviews([]);
+              setWaUrl(''); setWaText(''); setCopied(false);
             }}
             className="text-[#d90082] font-bold hover:underline"
           >
