@@ -56,6 +56,13 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
 
   // Fallback base price if no variants exist
   const basePrice = selectedVariant?.price || product.price || 0;
+  // Balloons & accessories: no photo upload, no material choice, no rush fee
+  const BALLOON_CATEGORIES = new Set([
+    'SemperTex', 'TufTex', 'Numbers', 'Letters', 'Shapes',
+    'Birthday', 'Baby Shower', 'Wedding', 'Holiday',
+    'DIY Kit', 'Individual', 'Bunches', 'Accessories'
+  ]);
+  const isSimpleProduct = BALLOON_CATEGORIES.has(product.category);
   const rushSurcharge = 40;
   const rushLabel = (product as any).rush_label || ('Rush Order Delivery');
   const rushDesc = (product as any).rush_desc || ('Skip the line. Ships faster.');
@@ -189,7 +196,8 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                 </div>
               )}
 
-              {/* Material Dropdown */}
+              {/* Material Dropdown — hidden for balloons/accessories */}
+              {!isSimpleProduct && (
               <div>
                 <label htmlFor={`product-material-${product.id}`} className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Material Options</label>
                 <div className="relative">
@@ -213,8 +221,10 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                   <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
                 </div>
               </div>
+              )}
 
-              {/* File Upload Mandatory */}
+              {/* File Upload Mandatory — hidden for balloons/accessories */}
+              {!isSimpleProduct && (
               <div>
                 <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Print Artwork (Required)</label>
                 <label 
@@ -241,8 +251,10 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                   <span className="text-xs font-medium opacity-70 mt-1">.PDF, .AI, .PSD, .JPG (High Res)</span>
                 </label>
               </div>
+              )}
 
-              {/* Rush Order Toggle */}
+              {/* Rush Order Toggle — hidden for balloons/accessories */}
+              {!isSimpleProduct && (
               <div 
                 className={`p-5 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between ${
                   isRushOrder ? 'border-[#ff2a70] bg-[#ff2a70]/5' : 'border-slate-100 bg-white hover:border-slate-200'
@@ -262,6 +274,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                   +${rushSurcharge.toFixed(2)}
                 </div>
               </div>
+              )}
 
             </div>
 
@@ -273,21 +286,21 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
                </div>
                <button 
                 className={`flex-grow py-5 text-white rounded-full font-black text-sm tracking-widest uppercase transition-all shadow-xl flex items-center justify-center gap-2 ${
-                  selectedFile ? 'bg-[#d90082] hover:bg-[#ff2a70] hover:scale-105 active:scale-95' : 'bg-slate-300 cursor-not-allowed'
+                  (isSimpleProduct || selectedFile) ? 'bg-[#d90082] hover:bg-[#ff2a70] hover:scale-105 active:scale-95' : 'bg-slate-300 cursor-not-allowed'
                 }`}
                 onClick={() => {
-                  if (selectedFile && onAddToCart) {
+                  if ((isSimpleProduct || selectedFile) && onAddToCart) {
                     onAddToCart(product, { 
                       variant: selectedVariant, 
                       material, 
                       isRushOrder,
-                      artworkName: selectedFile.name 
+                      artworkName: selectedFile?.name || null
                     });
                     onClose();
                   }
                 }}
               >
-                {selectedFile ? ('Finalize Quote') : ('Upload File First')}
+                {(isSimpleProduct || selectedFile) ? ('Add to Cart') : ('Upload File First')}
               </button>
             </div>
 
