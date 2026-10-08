@@ -125,6 +125,7 @@ export async function POST(req: Request) {
       items,
       customer,
       promoCode,
+      loyalty,
       idempotencyKey: clientKey,
     } = body as {
       sourceId?: string;
@@ -135,6 +136,7 @@ export async function POST(req: Request) {
         address?: { street?: string; city?: string; state?: string; zip?: string };
       };
       promoCode?: string;
+      loyalty?: { pointsPerDollar?: number; balanceBefore?: number };
       idempotencyKey?: string;
     };
 
@@ -198,6 +200,18 @@ export async function POST(req: Request) {
 
     const orderNumber = generateOrderNumber();
     const referenceId = orderNumber;
+
+    // ---- Loyalty points for the receipt email (client awards them post-payment;
+    //      here we project the same numbers so the email shows the new balance) ----
+    const loyaltyPpd = Math.max(0, Number(loyalty?.pointsPerDollar) || 1);
+    const loyaltyEarned = Math.floor(Math.max(0, total) * loyaltyPpd);
+    const loyaltyBalanceAfter = Math.max(0, Math.floor(Number(loyalty?.balanceBefore) || 0)) + loyaltyEarned;
+    const loyaltyHtml = loyaltyEarned > 0 ? `
+              <div style="margin-top: 20px; padding: 15px; background: #fffbeb; border: 2px solid #f59e0b; border-radius: 10px; font-size: 13px; text-align: center;">
+                <p style="margin: 0; font-size: 15px; font-weight: bold; color: #92400e;">You earned ${loyaltyEarned} loyalty points!</p>
+                <p style="margin: 6px 0 0; color: #92400e;">Your new balance: <strong>${loyaltyBalanceAfter} points</strong><br>
+                <span style="font-size: 12px;">Redeem them for rewards at magicprintsandballoons.vercel.app/rewards</span></p>
+              </div>` : '';
     const addressLine = needsAddress
       ? `${String(addr.street).trim()}, ${String(addr.city).trim()}, ${String(addr.state).trim()} ${String(addr.zip).trim()}`
       : 'Store Pickup / Arlington DFW';
@@ -321,6 +335,7 @@ export async function POST(req: Request) {
                 <tbody>${orderItemsHtml}</tbody>
               </table>
               <div style="text-align: right; font-size: 14px; line-height: 1.7;">${totalsHtml}</div>
+              ${loyaltyHtml}
               <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 13px;">
                 <p><strong>Fulfillment:</strong> ${fulfillmentMethod}</p>
                 <p><strong>Address:</strong> ${addressLine}</p>

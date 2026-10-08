@@ -36,6 +36,7 @@ const Navbar = () => {
     { label: language === 'en' ? 'Custom Prints' : 'Impresiones', href: '/products' },
     { label: language === 'en' ? 'Occasions' : 'Ocasiones', href: '/events' },
     { label: language === 'en' ? 'Packages' : 'Paquetes', href: '/packages' },
+    { label: language === 'en' ? 'Rewards' : 'Recompensas', href: '/rewards' },
     { label: language === 'en' ? 'Quote' : 'Cotización', href: '/quote' },
   ];
 

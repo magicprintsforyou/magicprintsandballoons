@@ -166,7 +166,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onClose, o
               {/* Size Specification */}
               {(product.variants && product.variants.length > 0) && (
                 <div>
-                  <label htmlFor={`product-size-${product.id}`} className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Select Size (Inches / Feet)</label>
+                  <label htmlFor={`product-size-${product.id}`} className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">{product.variantLabel || 'Select Size (Inches / Feet)'}</label>
                   <div className="relative">
                     <select 
                       id={`product-size-${product.id}`}

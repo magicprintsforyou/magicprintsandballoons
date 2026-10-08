@@ -9,7 +9,7 @@ import {
   FulfillmentMethod, FeeQuote, quoteDeliveryFee, shippingFee, cartHasPrints,
 } from '@/constants/fulfillment';
 import { generateOrderNumber, addOrder, loadOrders, OrderRecord, OrderItem } from '@/lib/orders';
-import { awardPoints } from '@/lib/loyalty';
+import { awardPoints, getCustomerPoints, loadLoyaltyConfig } from '@/lib/loyalty';
 
 const SQUARE_APP_ID = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID || '';
 const SQUARE_LOCATION_ID = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID || '';
@@ -192,6 +192,15 @@ export default function CheckoutPage() {
     sourceId,
     idempotencyKey: idempotencyKeyRef.current,
     promoCode: promoApplied ? promoCode : undefined,
+    loyalty: (() => {
+      try {
+        const cfg = loadLoyaltyConfig();
+        const rec = getCustomerPoints(email);
+        return { pointsPerDollar: cfg.pointsPerDollar, balanceBefore: rec?.points || 0 };
+      } catch {
+        return { pointsPerDollar: 1, balanceBefore: 0 };
+      }
+    })(),
     customer: {
       name,
       email,
