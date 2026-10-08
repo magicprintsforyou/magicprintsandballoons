@@ -32,6 +32,12 @@ export default function CheckoutPage() {
   const [promoCode, setPromoCode] = useState('');
   const [notes, setNotes] = useState('');
 
+  // Event date only required if cart has print products (not just balloons)
+  const PRINT_CATEGORIES = ['photoBoards', 'props', 'floorWraps', 'themedKits', 'essentials', 'Photo', 'Signage', 'Backdrop', 'Floor', 'Props', 'Flags', 'Signature', 'Essentials'];
+  const hasPrintProducts = useMemo(() => {
+    return cart.some(item => PRINT_CATEGORIES.includes(item.product.category));
+  }, [cart]);
+
   // Promo Code validation
   const [promoApplied, setPromoApplied] = useState(false);
   const [discountValue, setDiscountValue] = useState(0);
@@ -247,8 +253,8 @@ export default function CheckoutPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-white/80 flex items-center gap-2"><Calendar size={14}/> {language === 'en' ? 'Event Date' : 'Fecha del Evento'}</label>
-                <input required type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-4 py-3 text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d90082]/50 focus:bg-[#0f172a] transition-all" />
+                <label className="text-sm font-bold text-white/80 flex items-center gap-2"><Calendar size={14}/> {language === 'en' ? 'Event Date' : 'Fecha del Evento'}{hasPrintProducts ? '' : (language === 'en' ? ' (optional)' : ' (opcional)')}</label>
+                <input required={hasPrintProducts} type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full bg-[#0f172a]/50 border border-white/10 rounded-xl px-4 py-3 text-white/60 focus:outline-none focus:ring-2 focus:ring-[#d90082]/50 focus:bg-[#0f172a] transition-all" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-white/80 flex items-center gap-2"><Truck size={14}/> {language === 'en' ? 'Fulfillment Method' : 'Método de Entrega'}</label>
