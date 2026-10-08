@@ -57,7 +57,8 @@ export default function SquarePaymentForm({
       setSdkReady(true);
       return;
     }
-    const isSandbox = process.env.NEXT_PUBLIC_SQUARE_ENVIRONMENT === 'sandbox';
+    const appId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID || '';
+    const isSandbox = appId.startsWith('sandbox-') || process.env.NEXT_PUBLIC_SQUARE_ENVIRONMENT === 'sandbox';
     const script = document.createElement('script');
     script.src = isSandbox
       ? 'https://sandbox.web.squarecdn.com/v1/square.js'
