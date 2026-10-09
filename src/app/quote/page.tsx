@@ -101,6 +101,21 @@ export default function QuotePage() {
       existing.push(request);
       localStorage.setItem(key, JSON.stringify(existing));
 
+      // Email the quote to the business via Resend so the lead is never lost,
+      // even if the customer never presses send in WhatsApp.
+      try {
+        const emailRes = await fetch('/api/quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(request),
+        });
+        if (!emailRes.ok) {
+          console.warn('Quote email failed, WhatsApp remains the delivery channel.');
+        }
+      } catch (emailErr) {
+        console.warn('Quote email failed, WhatsApp remains the delivery channel.', emailErr);
+      }
+
       // Deliver the quote to the business instantly via WhatsApp. localStorage
       // alone never reaches us, so the request is opened as a WhatsApp chat
       // with every detail prefilled — the customer just presses send, then
